@@ -41,6 +41,18 @@ shinyUI(pageWithSidebar(
       label = 'Quote',
       choices = c('None' = '', '"' = '"', "'" = "'"),
       selected = "'"
+    ),
+
+    #Petite barre de séparation
+    tags$hr(),
+    
+    #Choix d'algorithm - solution temporaire 
+    radioButtons(
+      inputId = 'algorithme',
+      label = 'Algorithme',
+      choices = c('CART' = '', 'kNN' = '"', "randomForest" = "'",
+                  "rfRanger" = "'", "XGBoost" = "'", 
+                  "glmNetL1" = "'", "glmNetL2" = "'")
     )
     
   ),
