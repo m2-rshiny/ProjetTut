@@ -1,4 +1,3 @@
-
 ### gitignore special for R & RStudio###
 
 
@@ -23,7 +22,7 @@
 /*.Rcheck/
 
 # RStudio files
-.Rproj.user/
+MLShiny/.Rproj.user/
 
 # produced vignettes
 vignettes/*.html
