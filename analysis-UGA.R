@@ -10,56 +10,61 @@ library(Boruta)
 library(GGally)
 library(glmnet)
 
+#Chemin
+setwd("/home/chabeau/Documents/UGA/ProjetTut")
 
-# load serialized data ----------------------------------------------------
+### load serialized data ----------------------------------------------------
 sqAnoDf <- read_tsv(file = "anonymized-sq-dataset.tsv")
 
 
-# load training configuration ---------------------------------------------
-trainConfigDf <- read_xlsx(path = "Data/Training Configuration.xlsx", sheet = "Sheet1") %>% dplyr::filter(use == 1)
+### load training configuration ---------------------------------------------
+trainConfigDf <- read_xlsx(path = "MLShiny/Training Configuration.xlsx", sheet = "Sheet1") %>% dplyr::filter(use == 1)
 
 
-# set-up ------------------------------------------------------------------
+### set-up ------------------------------------------------------------------
 useSeed <- TRUE
 nSeed <- 123456789
 nCores <- detectCores()
 pSubSample <- 0.01
-indResp <- 2
+indResp <- 1
 
 sumList <- list()
 plotList <- list()
 fitList <- list()
 
 
-# list predictive features to be included in training process -------------
-# features are organized by rows of 5
+### list predictive features to be included in training process -------------
+### features are organized by rows of 5
+
+#Variable à expliquer
 responsesOfInterest <- c("LABEL")
+
+#Variables expliquatives
 featuresOfInterest <-  paste0("X", 1:144)
 
 
-# load data set and give generic name -------------------------------------
+### load data set and give generic name -------------------------------------
 if(useSeed)
   set.seed(nSeed)
 
 compDf <- sqAnoDf %>%
-  dplyr::filter(!is.na(delta) & delta >= 0) %>%
-  dplyr::select(responsesOfInterest[indResp],
-                featuresOfInterest) %>%
+  #dplyr::filter(!is.na(delta) & delta >= 0) %>%
+  dplyr::select(responsesOfInterest[indResp], featuresOfInterest) %>%
   na.omit(.) %>%
-  dplyr::group_by_(responsesOfInterest[indResp]) %>%
+  dplyr::group_by(responsesOfInterest[indResp]) %>%
   dplyr::sample_frac(pSubSample) %>%
   dplyr::ungroup()
 
   classResp <- class(compDf[, responsesOfInterest[indResp]][[1]])
 
 
-# sanity check ------------------------------------------------------------
+### sanity check ------------------------------------------------------------
 table(compDf[, responsesOfInterest[indResp]][[1]])
 #  Low High 
 # 3611  963 
 
 
-# summary plot ------------------------------------------------------------
+### summary plot ------------------------------------------------------------
 # plot(compDf)
 plotList[["corPlot"]] <- ggpairs(compDf,
                                  upper = list(continuous = wrap('cor',
@@ -70,7 +75,7 @@ plotList[["corPlot"]] <- ggpairs(compDf,
 plotList[["corPlot"]]
 
 
-# summary stats -----------------------------------------------------------
+### summary stats -----------------------------------------------------------
 sumList[["overall"]] <- summaryTable(compDf %>%
                                        dplyr::select(responsesOfInterest[indResp],
                                                      featuresOfInterest) %>%
@@ -97,7 +102,7 @@ if(classResp %in% c("factor", "character"))
                                        make.latex.safe = FALSE)
 
 
-# Boruta ------------------------------------------------------------------
+### Boruta ------------------------------------------------------------------
 resBoruta <- Boruta(x = compDf[, featuresOfInterest],
                     y = compDf[, responsesOfInterest[indResp]][[1]],
                     doTrace = 2,
@@ -149,12 +154,12 @@ plotList[["Boruta"]] <- ggplot(data = resBorutaImpDf %>%
 plotList[["Boruta"]]
 
 
-# LASSO -------------------------------------------------------------------
-# reformat using one-hot encoding -----------------------------------------
+### LASSO -------------------------------------------------------------------
+### reformat using one-hot encoding -----------------------------------------
 compMat <- model.matrix(~ .-1, compDf[, featuresOfInterest])
 
 
-# run cv lasso to identify best lambda ------------------------------------
+### run cv lasso to identify best lambda ------------------------------------
 cv.lasso <- cv.glmnet(x = compMat,
                       y = compDf[, responsesOfInterest[indResp]][[1]],
                       intercept = FALSE,
@@ -165,7 +170,7 @@ cv.lasso <- cv.glmnet(x = compMat,
 plot(cv.lasso, xvar = "lambda", label = TRUE)
 
 
-# run once to get an idea of variable importance --------------------------
+### run once to get an idea of variable importance --------------------------
 fit.lasso <- glmnet(x = compMat,
                     y = compDf[, responsesOfInterest[indResp]][[1]],
                     intercept = FALSE,
@@ -180,7 +185,7 @@ abline(v = log(cv.lasso$lambda.1se),
        lty = 3)
 
 
-# get list of variables and coefficients ----------------------------------
+### get list of variables and coefficients ----------------------------------
 sumList[["lassoCoeff"]] <- as.data.frame(as.matrix(coef(cv.lasso,
                                                         s = "lambda.min"))) %>%
   tibble::rownames_to_column("Feature") %>%
@@ -193,7 +198,7 @@ sumList[["lassoCoeff"]] <- as.data.frame(as.matrix(coef(cv.lasso,
 sumList[["lassoCoeff"]]
 
 
-# caret processes ---------------------------------------------------------
+### caret processes ---------------------------------------------------------
 # parallelized with foreach and doParallel package
 cl <- makePSOCKcluster(nCores - 1)
 registerDoParallel(cl)
@@ -243,7 +248,7 @@ names(fitList) <- trainConfigDf$name
 stopCluster(cl)
 
 
-# summarize performance ---------------------------------------------------
+### summarize performance ---------------------------------------------------
 reSampledFit <- resamples(fitList)
 summary(reSampledFit)
 
@@ -256,14 +261,14 @@ plotList[["dotPlot"]]
 gc()
 
 
-# use best model ----------------------------------------------------------
+### use best model ----------------------------------------------------------
 # bestModel <- fitList[["XGBoost"]]$finalModel
 # 
 # predict(bestModel,
 #         compDf)
 
 
-# serialize results -------------------------------------------------------
+### serialize results -------------------------------------------------------
 save(sumList,
      plotList,
      fitList,
