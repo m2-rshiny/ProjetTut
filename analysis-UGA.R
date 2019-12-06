@@ -33,7 +33,6 @@ sumList <- list()
 plotList <- list()
 fitList <- list()
 
-
 ### list predictive features to be included in training process -------------
 ### features are organized by rows of 5
 
