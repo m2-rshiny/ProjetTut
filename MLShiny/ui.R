@@ -1,8 +1,6 @@
-#source("code.R")
-##### Traitements préliminaires au lancement de l'appli  --------------------------------------------------------
-#options(encoding = "UTF-8")
-require(shiny)
-require(shinythemes)
+#Appel des packages dont nous avons besoin pour ce script
+source("scripts/packages.R")
+
 #Importation du fichier csv contenant la liste des algorithmes
 train_conf <- read.csv("train_conf.csv", sep=";", header=TRUE)
 
@@ -17,9 +15,9 @@ shinyUI(
          title = "Machine Learning BD",
          position = "static-top", responsive = TRUE,
          
-         ### Onglet 1 : Importaion des données/choix des algos/choix des variables/exécution
+         ### Onglet 1 : Importation des données
          tabPanel(
-            "Préparation algorithmes",
+            "Préparation données",
             
             #Layout de l'onglet
             sidebarLayout(
@@ -65,29 +63,8 @@ shinyUI(
                   actionButton("load_data", "Charger les données"),
                   
                   #Petite barre de séparation
-                  tags$hr(),
+                  tags$hr()
                   
-                  #Choix des algos à utiliser
-                  checkboxGroupInput(
-                     inputId = 'algorithme',
-                     label = 'Algorithme',
-                     choices = train_conf$name
-                  ),
-                  
-                  #Choix de la proportion d'apprentissage
-                  sliderInput(
-                     inputId = "prop_learn",
-                     label = "Proportion de données d'apprentissage",
-                     min = 5,
-                     max = 95,
-                     value = 70
-                  ),
-                  
-                  #Petite barre de séparation
-                  tags$hr(),
-                  
-                  #Bouton pour lancer l'éxecution des algorithmes.
-                  actionButton("exec", "Executer")
                ),
                
                #Contenu au centre de la page
@@ -99,19 +76,41 @@ shinyUI(
             )
          ),
          
-         ### Onglet 2 : Sorties
+         ### Onglet 2 : Paramétrage des algorithmes
          tabPanel(
             "ML Algorithme",
             class = "pages",
             fluidRow(
-               column(5, plotOutput("compare")), # colonne pour ploter les algo
-               column(5, verbatimTextOutput("value"))  # colonne pour afficher les summary
-            ),
-            fluidRow(
-               column(4, plotOutput("lasso")), # graphe lasso
-               column(4, plotOutput("ridge")), # graphe ridge
-               column(4, plotOutput("boruta"))#, # graph boruta
-               #sliderInput("nrowBoruta", "Variables importantes:", 1, nrowBoruta, inputBoruta))
+               # colonne pour ploter les algo
+               column(12,
+
+                  #Choix des algos à utiliser
+                  selectizeInput(
+                     inputId = 'algorithme',
+                     label = 'Algorithmes',
+                     choices = 
+                  ),
+                  checkboxGroupInput(
+                     inputId = 'algorithme',
+                     label = 'Algorithme',
+                     choices = c()
+                  ),
+                      
+                  #Choix de la proportion d'apprentissage
+                  sliderInput(
+                     inputId = "prop_learn",
+                     label = "Proportion de données d'apprentissage",
+                     min = 5,
+                     max = 95,
+                     value = 70
+                  ),
+                      
+                  #Petite barre de séparation
+                  #tags$hr(),
+                      
+                  #Bouton pour lancer l'éxecution des algorithmes.
+                  actionButton("exec", "Executer")
+               )
             )
          ),
          
