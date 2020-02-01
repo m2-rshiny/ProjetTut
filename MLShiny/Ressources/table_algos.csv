@@ -1,3 +1,0 @@
-method;name;tuning;type_tuning
-adaboost;AdaBoost Classification Trees;{nIter,method};{numeric,character}
-AdaBoost.M1;AdaBoost.M1;{mfinal,maxdepth,coeflearn};{numeric,numeric,character}
