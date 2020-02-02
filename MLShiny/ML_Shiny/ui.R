@@ -6,15 +6,15 @@ shinyUI(fluidPage(theme = shinytheme("simplex"),
                              
                              tabPanel("ML Algorithme", class = "pages",
                                       fluidRow(
-                                          column(2,
+                                          column(1,
                                                  selectInput("yvar", "Variable Y:",choices = var_response),
                                                  checkboxGroupInput("algo", "Algorithmes:", choices = algo, selected = algo)), # colonne pour choisir les algo
-                                          column(3,htmlOutput("best_param1"),
-                                                 plotOutput("algo1")), # colonne pour ploter les algo
+                                          column(4,htmlOutput("best_param1"),
+                                                 plotlyOutput("algo1")), # colonne pour ploter les algo
                                           column(3, htmlOutput("best_param2"),
-                                                 plotOutput("algo2")),
+                                                 plotlyOutput("algo2")),
                                           column(4, htmlOutput("best_param3"),
-                                                 plotOutput("algo3"))
+                                                 plotlyOutput("algo3"))
                                           #column(5, verbatimTextOutput("value"))  # colonne pour afficher les summary
                                       )),
                              
