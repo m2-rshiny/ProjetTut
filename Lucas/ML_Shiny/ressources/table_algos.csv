@@ -1,0 +1,10 @@
+name;method
+AdaBoost Classification Trees;adaboost
+AdaBoost.M1;AdaBoost.M1
+CART;rpart
+kNN;knn
+randomForest;rf
+rfRanger;ranger
+XGBoost;xgbTree
+glmNetL1;glmnet
+glmNetL2;glmnet
