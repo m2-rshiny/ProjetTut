@@ -40,7 +40,7 @@ shinyServer(function(input, output, session) {
 
   output$params1 <- renderUI({
     position <- which(input$algo == "XGBoost")
-    if (length(position) != 1) {
+    if (length(position) == 1) {
       column(
         2, h4("XGBoost"),
         textInput("nrounds", "Nrounds", placeholder = 100),
@@ -56,7 +56,7 @@ shinyServer(function(input, output, session) {
 
   output$params2 <- renderUI({
     position <- which(input$algo == "RfRanger")
-    if (length(position) != 1) {
+    if (length(position) == 1) {
       column(
         2, h4("Rf Ranger"),
         textInput("rfr_mtry", "Mtry", placeholder = 50),
@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
   output$params3 <- renderUI({
     position <- which(input$algo == "RF")
 
-    if (length(position) != 1) {
+    if (length(position) == 1) {
       column(
         2, h4("Random Forest"),
         textInput("rf_mtry", "Mtry", placeholder = 50),
@@ -80,7 +80,7 @@ shinyServer(function(input, output, session) {
 
   output$params4 <- renderUI({
     position <- which(input$algo == "Lasso")
-    if (length(position) != 1) {
+    if (length(position) == 1) {
       column(
         2, h4("Regularization"),
         textInput("alpha", "Alpha", placeholder = 1),
@@ -90,7 +90,7 @@ shinyServer(function(input, output, session) {
   })
   output$params5 <- renderUI({
     position <- which(input$algo == "Tree")
-    if (length(position) != 1) {
+    if (length(position) == 1) {
       column(
         2, h4("Decision Tree"),
         textInput("cp", "CP", placeholder = 0.005)
@@ -99,7 +99,7 @@ shinyServer(function(input, output, session) {
   })
   output$params6 <- renderUI({
     position <- which(input$algo == "Knn")
-    if (length(position) != 1) {
+    if (length(position) == 1) {
       column(
         2, h4("Knn"),
         textInput("k", "k Nombre de voisins", placeholder = 5)
