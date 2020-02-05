@@ -52,14 +52,6 @@ table_data <- tableOutput(outputId = "contents")
 #choix variable à expliquer
 choix_y <- selectInput("yvar", "Variable Y:", choices = var_response)
 
-#choix algo
-choix_algo <- selectizeInput(
-    inputId = 'algorithme',
-    label = 'Algorithme',
-    choices = algos$name,
-    multiple = TRUE
-)
-
 #Choix de la proportion d'apprentissage
 p_learn <- sliderInput(
     inputId = "prop_learn",
@@ -102,6 +94,26 @@ html3 <- htmlOutput("best_param3")
 graphique3 <- plotOutput("algo3")
 
 
+
+
+### Onglet 4 : Paramètres des algos
+
+# Choix méthodes
+choix_methode <- radioButtons("class_reg", "Choisir une méthode:",
+  choices = c("Classification", "Régression")
+)
+
+# Choix algo
+choix_algo <- selectizeInput(
+    inputId = 'algorithme',
+    label = 'Algorithme',
+    choices = algos$name,
+    multiple = TRUE
+)
+
+# Affichage des algo pour insérer leurs paramètres
+param_algos <- uiOutput("params")
+
 # PAGES #####################################################################
 
 ### Onglet 1 : Importation des données
@@ -132,7 +144,6 @@ tab2 <- tabPanel(
         column(
             2,
             choix_y, #Choix variable à expliquer
-            choix_algo, #Choix algorithme
             p_learn, #Proportion apprentissage
             tags$hr(), # Petite barre de séparation
             choix_cv, #Choix si validation croisée ou non
@@ -171,6 +182,24 @@ tab3 <- tabPanel(
     ),
 )
 
+
+### Onglet 4 : Paramètres des algos
+tab4 <- tabPanel(
+    "ML Paramètres",
+    class = "pages",
+    fluidRow(
+        column(
+            2,
+            choix_methode,
+            choix_algo
+        ),
+        column(
+          2,
+          param_algos
+        )
+    )
+)
+
 ### Page de navigation qui rassemble tous les onglets
 navbar_page <- navbarPage(
     title = "Machine Learning BD",
@@ -178,7 +207,8 @@ navbar_page <- navbarPage(
     responsive = TRUE,
     tab1,
     tab2,
-    tab3
+		tab3,
+		tab4
 )
 
 
