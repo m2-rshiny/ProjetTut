@@ -1,44 +1,27 @@
-#---------------SVM
-'Svm'=list(form=y ~ .,
-           data = mydata,
-           #preProcess = c('scale','center'),
-           method = 'svmLinear',
-           trControl = control,
-           tuneGrid=grid[['svmLinear']])
 
 
-output$best_param4 <- renderText({
-    if(length(choices_algo())<3){return(NULL)}
-    get_best_result(choices_algo()[[4]]) %>% 
-        kable("html", escape = FALSE, align = 'r') %>%
-        kable_styling(full_width = FALSE,
-                      bootstrap_options = c("striped", "condensed", "bordered"))
-    
-})
-output$algo4 <- renderPlotly({
-    if(length(choices_algo())<4){return(NULL)}
-    metrics <- choices_algo()[[4]]$results[,1:3]
-    metrics <- melt(metrics, id.vars="C",variable.name = "Accuracy",value.name="Kappa")
-    p <-  ggplot(metrics, aes(x = C, y = value, color = variable)) + 
-        geom_point() +
-        geom_line() + 
-        labs(title = "Svm", x = "C", y = " ") +
-        theme(legend.position = "none") +
-        scale_color_manual(values = mycolors)
-    ggplotly(p)
-    #ggplot(choices_algo()[[3]]) +
-    #  ggtitle(names(choices_algo())[3])
+
+
+'svmLinear'=list(form=y ~ .,
+                 data = mydata,
+                 #preProcess = c('scale','center'),
+                 method = 'svmLinear',
+                 trControl = control,
+                 tuneGrid=tuneParams[['svmLinear']])
+'svmPoly'= list(form=y ~ .,
+                data = mydata,
+                preProcess = c('scale','center'),
+                method = 'svmPoly',
+                trControl = control,
+                tuneGrid=tuneParams[['svmPoly']])
+
+
+output$compare <- renderPlot({
+    scales <- list(x=list(relation="free"), y=list(relation="free"))
+    bwplot(results, scales=scales)
 })
 
 
-
-
-
-
-
-
-
-#--------------Compare avec boxplot
 #-------------------knn---------------------#
 
 
@@ -73,17 +56,6 @@ results <- resamples(list(LASSO=fit.lass, RIDGE=fit.ridg, SVM=fit.svm, KNN=fit.k
 scales <- list(x=list(relation="free"), y=list(relation="free"))
 compareAlgo <- bwplot(results, scales=scales)
 #hcboxplot(results$values)
-output$compare <- renderPlot({
-    scales <- list(x=list(relation="free"), y=list(relation="free"))
-    bwplot(results, scales=scales)
-})
-
-
-
-
-
-
-
 
 
 #-------------------Boruta---------------------#
@@ -130,12 +102,6 @@ column(6, plotOutput("boruta"), # graph boruta
        sliderInput("nrowBoruta", "Variables importantes:", 1, nrowBoruta, inputBoruta))
 
 
-
-
-
-
-
-
 #-------------------LASSO---------------------#
 compMat <- model.matrix(~ .-1, compDf[, featuresOfInterest])
 
@@ -161,7 +127,7 @@ output$lasso <- renderPlot({
         geom_vline(xintercept = glance.lasso$lambda.1se, lty = 2)
 })
 
-
+,
 
 fluidRow(
     column(12, plotOutput("lasso")), # graphe lasso
