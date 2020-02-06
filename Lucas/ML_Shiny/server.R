@@ -40,18 +40,22 @@ shinyServer(function(input, output, session) {
   # Aide https://stackoverflow.com/questions/19130455/create-dynamic-number-of-input-elements-with-r-shiny
 
   output$params <- renderUI({
-    #Recherche du nombre d'algos séléctionnés
-    nb_algos <- length(input$algorithme)
-        
     #Fonction qui créé le bon nombre d'inputs en fonction de ses paramètres
-    lapply(1:nb_algos, function(i) {
-      textInput(paste0("ind", i), length(input$algorithme))
+    lapply(input$algorithme, function(i) {
+      column(
+        10,
+        h4(i),
+        textInput(paste0("ind", i), i, value="test", width = "20%")
+        #textInput("ok", "k", value="test", width = "20%")
+        #updateTextInput(session, inputId = "ok", value="test")
+      )
     })
-    #textInput("label", length(input$algorithme))
-    
     
   })
   
+  observe({
+    updateTextInput(session, inputId = "params", value="test")
+  })
   # 3 ML Algorithme ---------------------------------------------------------
 
   #-------------- Pour réactualiser la variable y à expliquer
