@@ -194,7 +194,7 @@ tab4 <- tabPanel(
             choix_algo
         ),
         column(
-          2,
+          10,
           param_algos
         )
     )

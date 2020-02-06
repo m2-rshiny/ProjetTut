@@ -43,7 +43,7 @@ shinyServer(function(input, output, session) {
     #Fonction qui créé le bon nombre d'inputs en fonction de ses paramètres
     lapply(input$algorithme, function(i) {
       column(
-        10,
+        4,
         h4(i),
         textInput(paste0("ind", i), i, value="test", width = "20%")
         #textInput("ok", "k", value="test", width = "20%")
