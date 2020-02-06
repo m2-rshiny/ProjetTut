@@ -3,6 +3,8 @@
 dataPreprocessingUI <- function(id) {
   # Namespace
   ns <- NS(id)
+  
+  # UI ELEMENTS ################################################################
 
   # DataTable output
   datatable_output <- dataTableOutput(ns("datatable"))
