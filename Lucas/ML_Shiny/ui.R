@@ -15,7 +15,7 @@ import_fich <- fileInput(
     # Types de fichiers acceptés
     accept = c("text/csv", ".csv")
 )
-    
+
 # Bouton choix Header
 header_but <- checkboxInput(
     inputId = "header",
@@ -107,7 +107,7 @@ choix_methode <- radioButtons("class_reg", "Choisir une méthode:",
 choix_algo <- selectizeInput(
     inputId = 'algorithme',
     label = 'Algorithme',
-    choices = algos$name,
+    choices = algos$method,
     multiple = TRUE
 )
 
