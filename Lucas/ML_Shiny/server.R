@@ -1,5 +1,8 @@
 source("scripts/code.R")
 shinyServer(function(input, output, session) {
+  
+  #Changement de capacité maximum de fichier de chargement
+  options(shiny.maxRequestSize=30*1024^2)
 
   #-------------Affichage données dans la l'onglet "Préparation des données"
 
@@ -22,7 +25,7 @@ shinyServer(function(input, output, session) {
   
   # Ce qui sera mis dans la table de données affichée
   output$contents <- renderTable({
-    data_inp()[1:20, 1:5]
+    data_inp()
   })
 
   output$input_type_text <- renderText({
@@ -42,19 +45,24 @@ shinyServer(function(input, output, session) {
   output$params <- renderUI({
     #Fonction qui créé le bon nombre d'inputs en fonction de ses paramètres
     lapply(input$algorithme, function(i) {
+      
+      #Information à propos du modèle
+      doc <- getModelInfo(model = i, regex = FALSE)[[1]]
+      
+      #Partie ui
       column(
         4,
-        h4(i),
-        textInput(paste0("ind", i), i, value="test", width = "20%")
-        #textInput("ok", "k", value="test", width = "20%")
-        #updateTextInput(session, inputId = "ok", value="test")
+        h4(i), #Titre avec nom de l'algo
+        apply(doc$parameters, 1, function(j){
+          textInput(paste0("ind", i, j[1]), j[1], placeholder=j[2], width = "100%") #Affichage du textinput correspondant
+        })
       )
     })
     
   })
   
   observe({
-    updateTextInput(session, inputId = "params", value="test")
+    updateTextInput(session, inputId = "params", placeholder="test")
   })
   # 3 ML Algorithme ---------------------------------------------------------
 
