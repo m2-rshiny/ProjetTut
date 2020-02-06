@@ -19,18 +19,18 @@ app_name <- "BD Shiny"
 ui <- navbarPage(
   app_name,
   tabPanel("Data Importation", data_importation_ui("di")),
-  tabPanel("Data Preprocessing", dataPreprocessingUI("dp")),
-  tabPanel("Exploratory Data Analysis", exploratoryDataAnalysisUI("eda")),
-  tabPanel("Model Selection", modelSelectionUI("ms")),
-  tabPanel("Export Results", exportResultsUI("er"))
+  tabPanel("Data Preprocessing", data_preprocessing_ui("dp")),
+  tabPanel("Exploratory Data Analysis", exploratory_data_analysis_ui("eda")),
+  tabPanel("Model Selection", model_selection_ui("ms")),
+  tabPanel("Export Results", export_results_ui("er"))
 )
 
 server <- function(input, output) {
   callModule(data_importation, "di")
-  callModule(dataPreprocessing, "dp")
-  callModule(exploratoryDataAnalysis, "eda")
-  callModule(modelSelection, "ms")
-  callModule(exportResults, "er")
+  callModule(data_preprocessing, "dp")
+  callModule(exploratory_data_analysis, "eda")
+  callModule(model_selection, "ms")
+  callModule(export_results, "er")
 }
 
 shinyApp(ui = ui, server = server)

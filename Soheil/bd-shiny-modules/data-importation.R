@@ -1,6 +1,6 @@
 # By default, the file size limit is 5MB. It can be changed by setting this
 # option. Here we'll raise limit to 9MB.
-options(shiny.maxRequestSize=30*1024^2)
+options(shiny.maxRequestSize = 30 * 1024^2)
 
 # SHINY UI #####################################################################
 
@@ -13,7 +13,7 @@ data_importation_ui <- function(id) {
   # File input element
   file_input <- fileInput(
     inputId = ns("fileInput"),
-    label = "Chemin du fichier (csv ou tsv)",
+    label = "Select a file",
     accept = c("text/csv", ".csv")
   )
 
@@ -41,12 +41,12 @@ data_importation_ui <- function(id) {
   )
 
   # Button to load data
-  load_data_button <- actionButton(ns("loadDataButton"), "Charger les données")
+  load_data_button <- actionButton(ns("loadDataButton"), "Load data")
 
   # DataTable output
   datatable_output <- dataTableOutput(ns("datatable"))
 
-  # LAYOUTS ####################################################################
+  # UI LAYOUTS ####################################################################
 
   # Sidebar panel
   sidebar_panel <- sidebarPanel(
@@ -66,6 +66,8 @@ data_importation_ui <- function(id) {
 
   # Return UI
   tagList(
+    h3("Data Importation"),
+    hr(),
     sidebar_layout
   )
 }
@@ -95,7 +97,7 @@ data_importation <- function(input, output, session) {
     return(df)
   })
 
-  # Ce qui sera mis dans la table de données affichée
+  # DataTable to display
   output$datatable <- renderDataTable({
     data_imported()
   })

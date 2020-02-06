@@ -1,14 +1,16 @@
 # SHINY UI #####################################################################
 
-exploratoryDataAnalysisUI <- function(id) {
+exploratory_data_analysis_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    h3("Exploratory Data Analysis"),
+    hr()
     # TODO
   )
 }
 
 # SERVER LOGIC #################################################################
 
-exploratoryDataAnalysis <- function(input, output, session) {
+exploratory_data_analysis <- function(input, output, session) {
   # TODO
 }
