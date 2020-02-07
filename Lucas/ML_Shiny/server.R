@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
         4,
         h4(i), #Titre avec nom de l'algo
         apply(doc$parameters, 1, function(j){
-          textInput(paste0("ind", i, j[1]), j[1], placeholder=j[2], width = "100%") #Affichage du textinput correspondant
+          textInput(paste0(i, j[1]), j[1], placeholder=j[2], width = "100%") #Affichage du textinput correspondant
         })
       )
     })
@@ -76,6 +76,7 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$exec, {
     responsesOfInterest <- input$yvar
+    
     set.seed(7323)
     compDf <- data_inp() %>% # Notre data frame
       # dplyr::filter(!is.na(delta) & delta >= 0) %>%
@@ -155,87 +156,5 @@ shinyServer(function(input, output, session) {
     })
 
     #-------------- Affichage des résultats
-    output$best_param1 <- renderText({
-      if(is.null(choices_algo())){return(NULL)}
-      get_best_result(choices_algo()[[1]])[1:3] %>% 
-        kable("html", escape = FALSE, align = 'r') %>%
-        kable_styling(full_width = FALSE,
-                      bootstrap_options = c("striped", "condensed", "bordered"))
-      
-    })
     
-    output$algo1 <- renderPlotly({
-      if(is.null(choices_algo())){return(NULL)}
-      metrics <- choices_algo()[[1]]$results[,1:3]
-      metrics <- melt(metrics, id.vars="mtry",variable.name = "Accuracy",value.name="Kappa")
-      p <-  ggplot(metrics, aes(x = mtry, y = value, color = variable)) + 
-        geom_point() +
-        geom_line() + 
-        labs(title = "Random Forest", x = "mtry", y = "Cross-Validation") +
-        theme(legend.position = "top") +
-        scale_color_manual(values = mycolors)
-      ggplotly(p)%>%
-        layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
-    })
-    
-    
-    output$best_param2 <- renderText({
-      if(length(choices_algo())<2){return(NULL)}
-      get_best_result(choices_algo()[[2]])[1:3] %>% 
-        kable("html", escape = FALSE, align = 'r') %>%
-        kable_styling(full_width = FALSE,
-                      bootstrap_options = c("striped", "condensed", "bordered"))
-      
-    })
-    output$algo2 <- renderPlotly({
-      if(length(choices_algo())<2){return(NULL)}
-      metrics <- choices_algo()[[2]]$results[,1:3]
-      metrics <- melt(metrics, id.vars="k",variable.name = "Accuracy",value.name="Kappa")
-      p <-  ggplot(metrics, aes(x = k, y = value, color = variable)) + 
-        geom_point() +
-        geom_line() + 
-        labs(title = "Knn", x = "k", y = " ") +
-        theme(legend.position = "none") +
-        scale_color_manual(values = mycolors)
-      ggplotly(p)
-    })
-    
-    
-    output$best_param3 <- renderText({
-      if(length(choices_algo())<3){return(NULL)}
-      get_best_result(choices_algo()[[3]])[2:4] %>% 
-        kable("html", escape = FALSE, align = 'r') %>%
-        kable_styling(full_width = FALSE,
-                      bootstrap_options = c("striped", "condensed", "bordered"))
-      
-    })
-    output$algo3 <- renderPlotly({
-      if(length(choices_algo())<3){return(NULL)}
-      metrics <- choices_algo()[[3]]$results[,2:4]
-      metrics <- melt(metrics, id.vars="lambda",variable.name = "Accuracy",value.name="Kappa")
-      p <-  ggplot(metrics, aes(x = lambda, y = value, color = variable)) + 
-        geom_point() +
-        geom_line() + 
-        labs(title = "Lasso", x = "lambda", y = " ") +
-        theme(legend.position = "none") +
-        scale_color_manual(values = mycolors)
-      ggplotly(p)
-    })
-  })
-
-
-
-
-
-
-
-
-  #--------------- Data --------------#  
-  # output$Donnees <- renderText({
-  #    sqAnoDf[1:30,1:10] %>%
-  #        kable("html", escape = FALSE) %>%
-  #        kable_styling(font_size = 11, full_width = FALSE,
-  #                      bootstrap_options = c("striped", "condensed", "bordered")) %>%
-  #        scroll_box(width = "1350px", height = "600px")
-  # })
 })

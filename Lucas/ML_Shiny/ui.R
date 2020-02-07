@@ -114,6 +114,13 @@ choix_algo <- selectizeInput(
 # Affichage des algo pour insérer leurs paramètres
 param_algos <- uiOutput("params")
 
+
+
+### Onglet 5 : Tableau des indicateurs des algos
+
+# Tableau des données importées
+table_results_algos <- tableOutput(outputId = "contents")
+
 # PAGES #####################################################################
 
 ### Onglet 1 : Importation des données
@@ -200,6 +207,17 @@ tab4 <- tabPanel(
     )
 )
 
+
+### Onglet 5 : Tableau des indicateurs des algos
+tab5 <- tabPanel(
+  "Résultats algorithmes",
+  class = "pages",
+  fluidRow(
+    column(12, table_results_algos)
+  )
+)
+
+
 ### Page de navigation qui rassemble tous les onglets
 navbar_page <- navbarPage(
     title = "Machine Learning BD",
@@ -208,7 +226,8 @@ navbar_page <- navbarPage(
     tab1,
     tab2,
 		tab3,
-		tab4
+		tab4,
+		tab5
 )
 
 

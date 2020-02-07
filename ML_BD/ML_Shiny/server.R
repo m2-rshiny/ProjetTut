@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
   
   # Ce qui sera mis dans la table de données affichée
   output$contents <- renderTable({
-    data_inp()[1:20,1:8]
+    data_inp()
   })
 
   output$input_type_text <- renderText({
@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
         4,
         h4(i), #Titre avec nom de l'algo
         apply(doc$parameters, 1, function(j){
-          textInput(paste0("algos", i, j[1]), j[1], placeholder=j[2], width = "100%") #Affichage du textinput correspondant
+          textInput(paste0(i, j[1]), j[1], placeholder=j[2], width = "100%") #Affichage du textinput correspondant
         })
       )
     })
@@ -115,7 +115,7 @@ shinyServer(function(input, output, session) {
         preProcess = c("scale", "center"),
         method = "adaboost",
         trControl = control,
-        tuneGrid = grid[["adaboost"]]
+        tuneGrid = expend.grid(niter=input$adaboostniter)
       ),
       "AdaBoost.M1" = list(
         form = y ~ .,
