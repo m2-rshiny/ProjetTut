@@ -167,3 +167,56 @@ Dans le plot du milieu, nous observons la fréquence des valeurs manquantes pour
 - *Remove* : 0.8 $<$ la proportion des valeurs manquante $\leq$ 1
 
 Et sur le graphique de droite, nous pouvons voir nos variables une par une. Si la variable se compose de données numériques, un boxplot sera généré, et dans le cas de données non numériques, nous verrons un barplot.
+
+
+## ML Parameteres
+
+À cet étape, après avoir déjà téléchargé le fichier de données et effectué quelques statistiques descriptives, il est temps pour la première modélisation. Et tout d'abord, l'utilisateur aura la possibilité de choisir des paramètres pour les algorithmes souhaités. Donc, la troisième fenêtre de l'application dédiée aux hyperparamètres et autres spécificités.
+
+Premièrement, nous sommes confrontés au choix entre la régression et la classification.
+
+***Rappel*** 
+```
+La classification est la tâche de prédire une étiquette de classe discrète.
+La régression consiste à prédire une quantité continue.
+```
+
+Ensuite, c'est le choix des hyperparamètres. Ici, les choix de l'utilisateur sont:
+
+- soit saisir les paramètres définis par les siens
+- soit laisser le package ***caret*** de R régler les hyperparamètres */parameter tuning/*
+
+&nbsp;\newline
+**Réglage des hyperparamètres avec caret**
+
+Avec l'application, un fichier .csv sera fourni avec les valeurs par défaut pour le réglage des hyperparamètres que vous pouvez voir ci-dessous.
+
+```{r echo=FALSE, message=FALSE}
+require(kableExtra)
+tmp1 <- read.csv("../ML_BD/ML_Shiny/ressources/train_conf.csv", header=T, sep = ";")[,-1]
+kable(tmp1, format = "latex", booktabs = TRUE) %>%
+    kable_styling(latex_options="scale_down")
+
+```
+
+Comme on veux voir:
+
+- pour certains des algorithmes, une mise à centrée réduit sera proposée comme *preProcessing*.
+- la métrique de formation a été choisie precision */Accuracy/*
+- la qualité des paramètres sera contrôlée par une validation croisée 10 fois 
+- pour les algorithmes glmnet */Ridge et Lasso/* **$\alpha$** et les valeurs possibles de **$\lambda$** sont définies en complément.
+
+&nbsp;\newline
+**Réglage des hyperparamètres à la main**
+
+Si de toute façon l'utilisateur décide d'entrer ses propres paramètres, il doit choisir les algorithmes que l'on souhaite utiliser dans la partie intitulée "Algorithmes" et entrer les paramètres. Après exécution, dans une nouvelle fenêtre on peut voir le choix final des paramètres qui seront utilisés pour la partie principale de modélisation.
+
+
+
+
+
+
+
+
+
+
