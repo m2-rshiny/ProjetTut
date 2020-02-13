@@ -1,16 +1,133 @@
 ---
-title: "rapport-temporaire"
-author: "Azat ALEKSANYAN"
-date: "2/10/2020"
 output: 
     pdf_document:
-        toc: true
+        # fig.caption: yes
 ---
 
+\begin{titlepage} 
+
+    \newcommand{\HRule}{\rule{\linewidth}{1mm}}  
+
+  \vspace*{1cm} 
+
+
+\begin{center} 
+
+\textsc{\LARGE Université Grenoble-Alpes }\\[1.5cm] 
+
+\end{center} 
+
+  \vspace*{2cm} 
+
+
+\HRule\\ 
+    \begin{center} 
+    
+    {\LARGE\bfseries Développement d'application RShiny }\\[0.4cm]  
+
+    \end{center} 
+
+    \HRule\\[0.7cm] 
+
+     
+
+\begin{flushleft} 
+
+            \large 
+
+            \textbf{Auteurs}\\ 
+
+            Komi \textsc{Agblodoe}\newline
+            Azat \textsc{Aleksanyan}\newline 
+            Lucas \textsc{Chabeau}\newline 
+            Mamadou \textsc{Diamban}\newline 
+            Soheil \textsc{Salmani} 
+
+\end{flushleft} 
+
+         
+
+\begin{flushright} 
+
+            \large 
+
+            \textbf{Tuteur}\\ 
+
+ Didier \textsc{Morel}  \\
+
+
+\end{flushright} 
+\vspace*{3cm} 
+
+
+\begin{center}
+\textbf{\large 21 février 2020} 
+\end{center}
+
+
+\end{titlepage} 
 
 \newpage
 
-# Méthodologie
+# Remerciements
+
+Nous tenons à remercier particulièrement Monsieur Didier Morel pour leur aide, leur disponibilité et leur écoute tout au long du projet.
+
+Nous remercions aussi le BD pour la confiance qu'ils nous ont accordé avec ce projet.
+
+\newpage
+
+\renewcommand{\contentsname}{Table des Matières}
+\tableofcontents
+
+\newpage
+
+# 1. Introduction
+
+Dans le cadre de notre préparation au diplôme d'ingénieur en statistiques et sciences de données, nous avons été amenés à effectuer notre projet de cinquième année en partenariat avec l'entreprise BD (Becton et Dickinson) et sous l'encadrement de Didier Morel.
+ 
+Il concerne le développement d'une application RShiny permettant de comparer et de tester des algorithmes de Machine Learning. Dans la mesure où il n'existe apparemment aucune application en ligne permettant de réaliser ce type de travail, il semble très intéressant de mettre en place un tel outil. Ainsi, les expérimentés comme les personnes sans trop de connaissances en apprentissage automatique pourront se servir de l'application pour avoir un aperçu de  l'efficacité de différentes méthodes.
+
+Dans ce projet, après avoir identifié le contexte, les besoins et les contraintes, nous avons procédé à la construction de notre application en créant deux fichiers dont un pour le serveur et le second pour l'interface utilisateur. Nous avons implémenté dans notre application, des algorithmes de classification et de régression comme AdaBoost Classification Trees, AdaBoost.M1, CART, les k plus proches voisins (kNN), le randomForest, RfRanger, XGBoost, glmNetL1, glmNetL2. Pour ces différents algorithmes, l'utilisateur a la possibilité de choisir les paramètres voulus. Nous avons ensuite procédé aux tests sur des jeux de données afin de comparer la performance des différents algorithmes de classification. Il faut noter aussi que notre application est capable de charger les jeux de données de type CSV et TSV.
+
+\newpage
+
+# 2. Présentation de l'application
+
+Notre application web est constituée d'un menu  permanent qui permet de naviguer. Sur le site, une page d'accueil présente l'outil général à l'internaute.
+
+## 2.1 Présentation succinte de Shiny
+
+Shiny, est un package R qui facilite la construction d'applications web interactives depuis R permettant une sortie en html. Une application shiny se structure en deux parties à savoir :
+
+- Un côté UI (User Interface) qui regroupe tous les éléments de mise en forme et d'affichage de l'interface utilisateur (affichage des inputs et des outputs).
+- Un côté Serveur où sont exécutés les codes R qui servent à produire les éléments de sorties (graphiques, tables, traitements, etc..) et à les mettre à jour en cas de changement dans les valeurs d'entrées (inputs).
+
+Les utilisateurs peuvent simplement manipuler l'application pour exécuter et afficher des résultats fournis par du code R.
+
+Notre application a été structurée en deux parties comme décrites ci-haut.
+
+## 2.2 Rôles de l'application
+
+Le travail qui nous a été demandé par Didier Morel est le développemnt d'une application avec Shiny. Le développement de cette application passe par l'implémentation des algorithmes de machine learning. Cette application doit être capable de:
+
+- Tester l'efficacité des algorithmes (vitesse d'exécution)
+- Tester la qualité des modèles fournis par les algorithmes (erreurs/taux de bonne classification)
+- Donner une sortie PDF qui résume les résultats des tests d'algorithmes
+
+## 2.3 Contraintes de l'application
+
+En ce qui concerne notre application web, différentes contraintes inhérentes à sa nature sont prises en compte à savoir:
+
+- L'application doit être compatible avec n'importe quel jeu de données (format TSV ou CSV)
+- L'application doit donc être réactive
+- L'utilisateur doit pouvoir choisir les variables explicatives et les variables à expliquer
+- L'utilisateur choisit quels algorithmes tester sur son jeu de données
+- L'application doit être facile à maintenir.
+
+\newpage
+
+# 3. Machine Learning Algorithmes
 
 Afin de répondre au mieux à notre problématique nous avons fait le choix d’utiliser plusieurs algorithms différentes pour analyser nos données.
 
@@ -127,13 +244,19 @@ pour $k = 1 \ a \ K$, il faut :
 
 A la fin, on évalue les performances du modèle.
 
-![Validation Croisée](img/cv.png){width=200px}
+![Validation Croisée](img/cv.png){width=400px}
 
 \newpage
 
-# Fonctionnalité d'application
+# 4. Développement d'application
 
-## Préparation de donnees
+L'interface utilisateur a été conçue pour être intuitive et fonctionnelle. Répondant aux contraintes, elle permet à l'utilisateur de charger un jeu de données (de type TSV ou CSV), de choisir les variables explicatives et celles à expliquer, ainsi que les algorithmes et les paramètres de son choix. Outre celà, l'utilisateur a aussi la possibilté de faire des statistiques decriptives pour lui permettre d'explorer son jeu de données.
+
+Ci-dessous une capture d'écran de l'application avec un exemple à l'appui.
+
+# IMAGE INPUT - DONT FORGET
+
+## 4.1 Préparation de donnees
 
 notre application commence par la préparation des données. Dans cette fenêtre, l'utilisateur pourra:
 
@@ -141,7 +264,7 @@ notre application commence par la préparation des données. Dans cette fenêtre
 - choisir la présence de "header", le séparateur et la citation
 - et enfin voir un aperçu rapide des données après avoir cliqué sur le bouton *"Upload"*.
 
-## Statistiques Descriptives
+## 4.2 Statistiques Descriptives
 
 Après avoir téléchargé notre fichier de données dans l'application, dans la deuxième fenêtre, nous pourrons voir une statistique descriptive automatisée.
 
@@ -168,12 +291,21 @@ Dans le plot du milieu, nous observons la fréquence des valeurs manquantes pour
 
 Et sur le graphique de droite, nous pouvons voir nos variables une par une. Si la variable se compose de données numériques, un boxplot sera généré, et dans le cas de données non numériques, nous verrons un barplot.
 
+Si dans le jeu de données des valeurs manquantes ont été trouvées, notre application vous proposera de faire l'imputation. Pour le moment, trois méthodes d'imputation sont disponibles:
 
-## ML Parameteres
+- pmm  */Predictive mean matching (Correspondance moyenne prédictive)/* : Il vise à réduire le biais introduit dans un ensemble de données par imputation, en tirant des valeurs réelles échantillonnées à partir des données.
+
+- norm : Calcule les imputations pour les données manquantes univariées par régression linéaire bayésienne, également connue sous le nom de modèle normal.
+
+- mean : Une autre technique d'imputation consiste à remplacer toute valeur manquante par la moyenne de cette variable pour tous les autres cas, ce qui présente l'avantage de ne pas modifier la moyenne de l'échantillon pour cette variable
+
+Après l'exécution, nous verrons une vue rapide de l'ensemble de données, où nous pouvons être assurés que les valeurs manquantes ont été imputées.
+
+## 4.3 ML Parameteres
 
 À cet étape, après avoir déjà téléchargé le fichier de données et effectué quelques statistiques descriptives, il est temps pour la première modélisation. Et tout d'abord, l'utilisateur aura la possibilité de choisir des paramètres pour les algorithmes souhaités. Donc, la troisième fenêtre de l'application dédiée aux hyperparamètres et autres spécificités.
 
-Premièrement, nous sommes confrontés au choix entre la régression et la classification.
+Premièrement, on est confrontés au choix entre la régression et la classification.
 
 ***Rappel*** 
 ```
@@ -191,11 +323,12 @@ Ensuite, c'est le choix des hyperparamètres. Ici, les choix de l'utilisateur so
 
 Avec l'application, un fichier .csv sera fourni avec les valeurs par défaut pour le réglage des hyperparamètres que vous pouvez voir ci-dessous.
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, fig.cap="blbala"}
+
 require(kableExtra)
 tmp1 <- read.csv("../ML_BD/ML_Shiny/ressources/train_conf.csv", header=T, sep = ";")[,-1]
-kable(tmp1, format = "latex", booktabs = TRUE) %>%
-    kable_styling(latex_options="scale_down")
+kable(tmp1, booktabs = TRUE,caption = "Les valeurs par défaut pour le réglage des hyperparamètres") %>%
+    kable_styling(latex_options=c("scale_down", "hold_position"))
 
 ```
 
@@ -212,8 +345,17 @@ Comme on veux voir:
 Si de toute façon l'utilisateur décide d'entrer ses propres paramètres, il doit choisir les algorithmes que l'on souhaite utiliser dans la partie intitulée "Algorithmes" et entrer les paramètres. Après exécution, dans une nouvelle fenêtre on peut voir le choix final des paramètres qui seront utilisés pour la partie principale de modélisation.
 
 
+## 4.4 ML Algorithme 
 
+Après avoir réglé/importé tous les hyperparamètres, il est temps de visualiser et de comparer la qualité et la précision des algorithmes pour les données.
 
+Ici, l'utilisateur aura la possibilité de :
+
+- choisir la variable d'interet 
+- confirmer l'option de validation croisée et les folds
+- varier la proportion de données d'apprentissage
+
+Ensuite, la comparaison de la précision et de kappa seront affichées sur l'application.
 
 
 
