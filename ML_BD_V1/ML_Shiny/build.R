@@ -7,7 +7,7 @@ form_algo <- list()
 apply(data_config, 1, function(x){
     preproc <- x[which(names(data_config)=="preProc")]
     tunegrid <- paste("expand.grid(", x[which(names(data_config)=="tuneGrid")], ")", sep="")
-    method <- paste("'", x[which(names(data_config)=="method")], "'")
+    method <- paste("'", x[which(names(data_config)=="method")], "'", sep="")
     expr1 <- paste("form_algo[['", x[which(names(data_config)=="method")], "']]", sep="")
     expr2 <- paste(
         "form = y ~ ." ,
@@ -23,63 +23,54 @@ apply(data_config, 1, function(x){
     eval(parse(text = expr))
 })
 
-form_algo <- list(
+form_algo2 <- list(
     "adaboost" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "adaboost",
-        trControl = control,
-        tuneGrid = grid[["adaboost"]]
+        trControl = control
     ),
     "AdaBoost.M1" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "AdaBoost.M1",
-        trControl = control,
-        tuneGrid = grid[["AdaBoost.M1"]]
+        trControl = control
     ),
     "rpart" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "rpart",
-        trControl = control,
-        tuneGrid = grid[["rpart"]]
+        trControl = control
     ),
     "ranger" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "ranger",
-        trControl = control,
-        tuneGrid = grid[["ranger"]]
+        trControl = control
     ),
     "rf" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "rf",
-        trControl = control,
-        tuneGrid = grid[["rf"]],
-        ntree = 500
+        trControl = control
     ),
     "knn" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "knn",
-        trControl = control,
-        tuneGrid = grid[["knn"]]
+        trControl = control
     ),
     "glmnet" = list(
         form = y ~ .,
-        data = mydata,
+        data = data_inp,
         preProcess = c("scale", "center"),
         method = "glmnet",
-        trControl = control,
-        # family="multinomial",
-        tuneGrid = grid[["glmnet"]]
+        trControl = control
     )
 )

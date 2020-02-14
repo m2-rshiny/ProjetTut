@@ -290,7 +290,7 @@ shinyServer(function(input, output, session) {
     apply(data_config(), 1, function(x){
       preproc <- x[which(names(data_config())=="preProc")]
       tunegrid <- paste("expand.grid(", x[which(names(data_config())=="tuneGrid")], ")", sep="")
-      method <- paste("'", x[which(names(data_config())=="method")], "'")
+      method <- paste("'", x[which(names(data_config())=="method")], "'", sep="")
       expr1 <- paste("form_algo[['", x[which(names(data_config())=="method")], "']]", sep="")
       expr2 <- paste(
         "form = y ~ ." ,
