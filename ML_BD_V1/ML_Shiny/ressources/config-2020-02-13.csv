@@ -1,0 +1,4 @@
+"";"name";"method";"preProc";"trainMetric";"trainControl";"tuneGrid"
+"1";"AdaBoost Classification Trees";"adaboost";"c('scale','range')";" ";" ";"nIter=12,method='test1'"
+"2";"CART";"rpart";"c('scale','range')";" ";" ";"cp=2"
+"3";"Random Forest";"rf";"c('center','scale')";" ";" ";"mtry=0.9"
