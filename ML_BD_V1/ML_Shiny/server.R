@@ -239,44 +239,44 @@ shinyServer(function(input, output, session) {
     responsesOfInterest <- input$yvar # Récupère la valeur à prédire
     set.seed(7323)
     
+    # S'il ya imputation, on prend les données imputées, sinon on prend les données d'origines
     ifelse(input$exec_imput != 0, df <- data_imput(), df <- data_inp())
     
     # Récupère la variable à expliquer
     yTrain <- df[, responsesOfInterest[indResp]]
     
     # Réalise du one hot encoding sauf sur la variable à expliquer
-    df_x <- select(df, -responsesOfInterest[indResp])
-    compMat <- model.matrix(~ . - 1, df_x)
+    df_x <- select(df, -responsesOfInterest) # On enlève la variable à expliquer
+    
+    # On fait du one hot sur le reste des variables
+    ifelse(input$onehot=="Yes", compMat <- model.matrix(~ . - 1, df_x), compMat <- df_x)
+    
+    #On remet la variable à expliquer
+    compMat <- cbind.data.frame(y = yTrain, compMat)
     
     # Partitionnement du dataframe.
-    choice_cv <- reactive({
-      
-      compMat <- data.frame(y = yTrain, compMat)
-      if (input$cv_y_n == "Oui") { # Si l'utilisateur veut faire une validation croisée
-        
-        train_index <- sample(1:nrow(compMat), round(.8 * nrow(compMat)), replace = FALSE)
-        
-        # train_index <- createDataPartition(df[[responsesOfInterest]],
-        #                                   p = input$prop_learn, list = FALSE, times = 1)
-        isolate({
-          data_train <<- compMat[train_index, ]
-          # data_test <<- compMat[-train_index,]
-        })
-      }
-      else if (input$cv_y_n == "Non") {# Si les données ne sont pas imputées, on prend les données d'origine
-        isolate({
-          data_train <<- compMat %>% # Notre data frame
-            dplyr::select(y, everything()) %>% # Sélectionne la colonne LABEL et les colonnes commençant par X
-            na.omit(.) %>% # Enlève les lignes ayant des NA
-            dplyr::group_by(y) %>% # Regroupe par rapport à la variable LABEL
-            dplyr::sample_frac(pSubSample) %>% # Sélectionne pour chaque LABEL une proportion de 0.01
-            dplyr::ungroup()
-        })
-      }
-    })
     
-    mydata <- choice_cv()
-    class(mydata$y)
+    train_index <- sample(1:nrow(compMat), round(input$prop_learn/100 * nrow(compMat)), replace = FALSE)
+    compDf_train <- compMat[train_index, ]
+    compDf_test <- compMat[-train_index,]
+    
+    
+    ifelse(nrow(compDf_train) < 1000, pSubSample <- 0.1, pSubSample <- 0.01)
+    classResp <- class(compDf_train$y) 
+
+    if(classResp == "numeric" || classResp == "integer"){
+      mydata <- compDf_train %>%
+        na.omit(.) %>%
+        dplyr::sample_frac(pSubSample)
+      
+    }else{
+      mydata <- compDf_train %>%
+        na.omit(.) %>%
+        dplyr::group_by(y) %>%
+        dplyr::sample_frac(pSubSample) %>%
+        dplyr::ungroup()
+    }
+    
     
     #-----------------algo
     algo_choice <- isolate(input$algorithme)

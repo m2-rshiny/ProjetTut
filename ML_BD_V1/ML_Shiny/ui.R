@@ -261,7 +261,7 @@ tab4 <- tabPanel(
     column(
       2,
       choix_y, #Choix variable à expliquer
-      checkboxInput("onehot", "One Hot Encoding", choices = c("Yes", "No"))
+      radioButtons("onehot", "One Hot Encoding", choices = c("Yes", "No")),
       choix_cv, #Choix si validation croisée ou non
       tags$hr(), # Petite barre de séparation
       p_learn, #Proportion apprentissage

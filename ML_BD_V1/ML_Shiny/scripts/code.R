@@ -30,16 +30,9 @@ algo <- c("RF", "Knn", "Lasso")
 
 ### set-up ------------------------------------------------------------------
 nCores <- detectCores()
-pSubSample <- 0.01
 indResp <- 1
 
-#------------------Paramètres algo---------------------------------#
 
-grid <- list(
-  "knn" = expand.grid(k = seq(1, 21, by = 2)),
-  "rf" = data.frame(mtry = seq(1, 50, by = 3)),
-  "glmnet" = expand.grid(alpha = 1, lambda = seq(0, 0.2, by = 0.01))
-)
 
 
 get_best_result <- function(caret_fit) {
