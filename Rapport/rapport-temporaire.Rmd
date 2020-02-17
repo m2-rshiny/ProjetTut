@@ -85,47 +85,189 @@ Nous remercions aussi le BD pour la confiance qu'ils nous ont accordé avec ce p
 
 # 1. Introduction
 
-Dans le cadre de notre préparation au diplôme d'ingénieur en statistiques et sciences de données, nous avons été amenés à effectuer notre projet de cinquième année en partenariat avec l'entreprise BD (Becton et Dickinson) et sous l'encadrement de Didier Morel.
+Dans le cadre de notre préparation au diplôme de master en statistiques et sciences de données, nous avons été amenés à effectuer notre projet de cinquième année en partenariat avec l'entreprise BD (Becton et Dickinson) et sous l'encadrement de Didier Morel.
  
-Il concerne le développement d'une application RShiny permettant de comparer et de tester des algorithmes de Machine Learning. Dans la mesure où il n'existe apparemment aucune application en ligne permettant de réaliser ce type de travail, il semble très intéressant de mettre en place un tel outil. Ainsi, les expérimentés comme les personnes sans trop de connaissances en apprentissage automatique pourront se servir de l'application pour avoir un aperçu de  l'efficacité de différentes méthodes.
+Il concerne le développement d'une application RShiny permettant de comparer et de tester des algorithmes de Machine Learning. Dans la mesure où l'entreprise BD ne dispose d'aucune application en ligne permettant de réaliser ce type de travail, il semble très intéressant de mettre en place un tel outil. Ainsi, les expérimentés comme les personnes sans trop de connaissances en apprentissage automatique pourront se servir de l'application pour avoir un aperÃ§u de  l'efficacité de différentes méthodes.
 
-Dans ce projet, après avoir identifié le contexte, les besoins et les contraintes, nous avons procédé à la construction de notre application en créant deux fichiers dont un pour le serveur et le second pour l'interface utilisateur. Nous avons implémenté dans notre application, des algorithmes de classification et de régression comme AdaBoost Classification Trees, AdaBoost.M1, CART, les k plus proches voisins (kNN), le randomForest, RfRanger, XGBoost, glmNetL1, glmNetL2. Pour ces différents algorithmes, l'utilisateur a la possibilité de choisir les paramètres voulus. Nous avons ensuite procédé aux tests sur des jeux de données afin de comparer la performance des différents algorithmes de classification. Il faut noter aussi que notre application est capable de charger les jeux de données de type CSV et TSV.
+Dans ce projet, après avoir identifié le contexte, les besoins et les contraintes, nous avons procédé à la construction de notre application en créant deux fichiers dont un pour le serveur et le second pour l'interface utilisateur. Nous avons implémenté dans notre application, des algorithmes de classification supervisée et de régression comme AdaBoost Classification Trees, AdaBoost.M1, CART, les k plus proches voisins (kNN), le randomForest, RfRanger, XGBoost, Ridge, Lasso. Pour ces différents algorithmes, l'utilisateur a la possibilité de choisir les paramètres voulus. Nous avons ensuite procédé aux tests sur des jeux de données afin de comparer la performance des différents algorithmes de classification supervisée et de régression. Il faut noter aussi que notre application est capable de charger les jeux de données de type CSV et TSV.
 
 \newpage
 
-# 2. Présentation de l'application
+# 2. Contexte (Komi)
 
-Notre application web est constituée d'un menu  permanent qui permet de naviguer. Sur le site, une page d'accueil présente l'outil général à l'internaute.
+# 3. Méthodologie (Azat)
 
-## 2.1 Présentation succinte de Shiny
+## 3.1 Pré-traitement des données
 
-Shiny, est un package R qui facilite la construction d'applications web interactives depuis R permettant une sortie en html. Une application shiny se structure en deux parties à savoir :
+### 3.1.1 Pré-traitements classiques
+
+(center scale one hot encoding model matrix etc)
+
+### 3.1.2 Imputation des données manquantes
+
+(celles proposées par mice)
+
+## 3.2 Echantillonnage
+
+### 3.2.1 Découpage des données
+
+Présentation de l'intérrêt de découpées les données en train/test et échantillon de validation
+
+### 3.2.2 Validation croisée
+
+## 3.3 Algorithmes d'apprentissage automatique
+
+## 3.4  Programmation
+
+### 3.4.1 Caret
+
+### 3.4.2 Tidyverse (Mamadou)
+
+# 4. Présentation de l'application
+
+Notre application web est constituée d'un menu  constitué de plusieurs permettant de contrôler chaque étape du processus de machine learning.
+
+## 4.1 Présentation succinte de Shiny
+
+Shiny, est un package R qui facilite la construction d'applications web interactives depuis R permettant une sortie en html. Une fonctionnalité d'une application shiny se divise en une partie UI et son traitement côté serveur associé. Plus précisemment:
 
 - Un côté UI (User Interface) qui regroupe tous les éléments de mise en forme et d'affichage de l'interface utilisateur (affichage des inputs et des outputs).
 - Un côté Serveur où sont exécutés les codes R qui servent à produire les éléments de sorties (graphiques, tables, traitements, etc..) et à les mettre à jour en cas de changement dans les valeurs d'entrées (inputs).
 
 Les utilisateurs peuvent simplement manipuler l'application pour exécuter et afficher des résultats fournis par du code R.
 
-Notre application a été structurée en deux parties comme décrites ci-haut.
+## 4.2 Rôles de l'application
 
-## 2.2 Rôles de l'application
+Le développement de cette application consiste en l'implémentation d'algorithmes d'apprentissage automatique avec la librairie caret. En utilisant l'application, l'utilisateur peut :
 
-Le travail qui nous a été demandé par Didier Morel est le développemnt d'une application avec Shiny. Le développement de cette application passe par l'implémentation des algorithmes de machine learning. Cette application doit être capable de:
+- Charger le fichier de données qu'il désire (CSV ou TSV)
+- Visualiser quelques statistiques descriptives sur ses donées
+- Imputer des valeurs manquantes selon différentes méthodes proposées par la package *mice*
+- Choisir la proportion d'apprentissage
+- Choisir le nombre de partitions de son échantillon d'apprentissage pour la validation croisée
+- Choisir un ou plusieurs algorithmes d'apprentissage automatique et ses paramètres
+- Sauvegarder / Charger une configuration d'algorithmes à tester
+- Choisir la variable à expliquer
+- Visualiser la qualité des modèles fournis par les algorithmes (erreurs/taux de bonne prédiction)
 
-- Tester l'efficacité des algorithmes (vitesse d'exécution)
-- Tester la qualité des modèles fournis par les algorithmes (erreurs/taux de bonne classification)
-- Donner une sortie PDF qui résume les résultats des tests d'algorithmes
 
-## 2.3 Contraintes de l'application
+## 4.3 Contraintes de l'application
 
 En ce qui concerne notre application web, différentes contraintes inhérentes à sa nature sont prises en compte à savoir:
 
-- L'application doit être compatible avec n'importe quel jeu de données (format TSV ou CSV)
-- L'application doit donc être réactive
-- L'utilisateur doit pouvoir choisir les variables explicatives et les variables à expliquer
-- L'utilisateur choisit quels algorithmes tester sur son jeu de données
+- L'application doit être réactive
 - L'application doit être facile à maintenir.
 
+## 4.4 Description détaillée de l'application
+
+L'interface utilisateur a été conçue pour être intuitive et fonctionnelle. Répondant aux contraintes, elle permet à l'utilisateur de charger un jeu de données (de type TSV ou CSV), de choisir les variables explicatives et celles à expliquer, ainsi que les algorithmes et les paramètres de son choix. Outre celà, l'utilisateur a aussi la possibilté de faire des statistiques decriptives pour lui permettre d'explorer son jeu de données.
+
+Ci-dessous une capture d'écran de l'application avec un exemple à l'appui.
+
+# IMAGE INPUT - DONT FORGET
+
+### 4.4.1 Préparation de donnees (Lucas)
+
+notre application commence par la préparation des données. Dans cette fenêtre, l'utilisateur pourra:
+
+- télécharger des fichiers de données (.csv / .tsv à ce stade de développement)
+- choisir la présence de "header", le séparateur et la citation
+- et enfin voir un aperçu rapide des données après avoir cliqué sur le bouton *"Upload"*.
+
+### 4.4.2 Statistiques Descriptives (Mamadou)
+
+Après avoir téléchargé notre fichier de données dans l'application, dans la deuxième fenêtre, nous pourrons voir une statistique descriptive automatisée.
+
+Sur le premier graphique, nous pouvons voir la description des informations de base dans la classe de données d'entrée:
+
+**c'est la description du fonction, mais dans l'exapmle de notre appli quelques points sont absents. faut relire**
+
+- *lignes*: nombre de lignes
+- *colonnes*: nombre de colonnes
+- *discrete_columns*: nombre de colonnes discrètes
+- *colonnes_continues*: nombre de colonnes continues
+- *all_missing_columns*: nombre de colonnes avec tout ce qui manque
+- *total_missing_values*: nombre d'observations manquantes
+- *complete_rows*: nombre de lignes sans valeurs manquantes
+- *total_observations*: nombre total d'observations
+- *memory_usage*: allocation de mémoire estimée en octets
+
+Dans le plot du milieu, nous observons la fréquence des valeurs manquantes pour chaque entité. Il y a 4 groupes pour décrire la situation des valeurs manquantes.
+
+- *Good* : quand la proportion des valeurs manquantes $\leq$ 0.05
+- *OK* : 0.05 $<$ la proportion des valeurs manquante $\leq$ 0.4
+- *Bad* : 0.4 $<$ la proportion des valeurs manquante $\leq$ 0.8
+- *Remove* : 0.8 $<$ la proportion des valeurs manquante $\leq$ 1
+
+Et sur le graphique de droite, nous pouvons voir nos variables une par une. Si la variable se compose de données numériques, un boxplot sera généré, et dans le cas de données non numériques, nous verrons un barplot.
+
+Si dans le jeu de données des valeurs manquantes ont été trouvées, notre application vous proposera de faire l'imputation. Pour le moment, trois méthodes d'imputation sont disponibles:
+
+- pmm  */Predictive mean matching (Correspondance moyenne prédictive)/* : Il vise à réduire le biais introduit dans un ensemble de données par imputation, en tirant des valeurs réelles échantillonnées à partir des données.
+
+- norm : Calcule les imputations pour les données manquantes univariées par régression linéaire bayésienne, également connue sous le nom de modèle normal.
+
+- mean : Une autre technique d'imputation consiste à remplacer toute valeur manquante par la moyenne de cette variable pour tous les autres cas, ce qui présente l'avantage de ne pas modifier la moyenne de l'échantillon pour cette variable
+
+Après l'exécution, nous verrons une vue rapide de l'ensemble de données, où nous pouvons être assurés que les valeurs manquantes ont été imputées.
+
+### 4.4.3 ML Parameteres (Lucas)
+
+À cet étape, après avoir déjà téléchargé le fichier de données et effectué quelques statistiques descriptives, il est temps pour la première modélisation. Et tout d'abord, l'utilisateur aura la possibilité de choisir des paramètres pour les algorithmes souhaités. Donc, la troisième fenêtre de l'application dédiée aux hyperparamètres et autres spécificités.
+
+Premièrement, on est confrontés au choix entre la régression et la classification.
+
+***Rappel*** 
+```
+La classification est la tâche de prédire une étiquette de classe discrète.
+La régression consiste à prédire une quantité continue.
+```
+
+Ensuite, c'est le choix des hyperparamètres. Ici, les choix de l'utilisateur sont:
+
+- soit saisir les paramètres définis par les siens
+- soit laisser le package ***caret*** de R régler les hyperparamètres */parameter tuning/*
+
+&nbsp;\newline
+**Réglage des hyperparamètres avec caret**
+
+Avec l'application, un fichier .csv sera fourni avec les valeurs par défaut pour le réglage des hyperparamètres que vous pouvez voir ci-dessous.
+
+```{r echo=FALSE, message=FALSE, fig.cap="blbala"}
+
+require(kableExtra)
+tmp1 <- read.csv("../ML_BD/ML_Shiny/ressources/train_conf.csv", header=T, sep = ";")[,-1]
+kable(tmp1, booktabs = TRUE,caption = "Les valeurs par défaut pour le réglage des hyperparamètres") %>%
+    kable_styling(latex_options=c("scale_down", "hold_position"))
+
+```
+
+Comme on veux voir:
+
+- pour certains des algorithmes, comme *preProcessing*, les donnees sont centrees et reduites par defaut
+- les meilleurs parametres sont choisis en comparant le differents */Accuracy/*
+- la qualité des paramètres sera contrôlée par une validation croisée (10 fois) 
+- pour les algorithmes glmnet */Ridge et Lasso/* **$\alpha$** et les valeurs possibles de **$\lambda$** sont définies en complément.
+
+&nbsp;\newline
+**Réglage des hyperparamètres à la main**
+
+Si de toute façon l'utilisateur décide d'entrer ses propres paramètres, il doit choisir les algorithmes que l'on souhaite utiliser dans la partie intitulée "Algorithmes" et entrer les paramètres. Après exécution, dans une nouvelle fenêtre on peut voir le choix final des paramètres qui seront utilisés pour la partie principale de modélisation.
+
+
+### 4.4.4 ML Algorithme (Mamadou/Lucas)
+
+Après avoir réglé/importé tous les hyperparamètres, il est temps de visualiser et de comparer la qualité et la précision des algorithmes pour les données.
+
+Ici, l'utilisateur aura la possibilité de :
+
+- choisir la variable d'interet 
+- confirmer l'option de validation croisée et les folds
+- varier la proportion de données d'apprentissage
+
+Ensuite, la comparaison de la précision et de kappa seront affichées sur l'application.
+
+  
 \newpage
 
 # 3. Machine Learning Algorithmes
@@ -249,117 +391,6 @@ A la fin, on évalue les performances du modèle.
 
 \newpage
 
-# 4. Développement d'application
+# 5. Structure de l'application (Soheil)
 
-L'interface utilisateur a été conçue pour être intuitive et fonctionnelle. Répondant aux contraintes, elle permet à l'utilisateur de charger un jeu de données (de type TSV ou CSV), de choisir les variables explicatives et celles à expliquer, ainsi que les algorithmes et les paramètres de son choix. Outre celà, l'utilisateur a aussi la possibilté de faire des statistiques decriptives pour lui permettre d'explorer son jeu de données.
-
-Ci-dessous une capture d'écran de l'application avec un exemple à l'appui.
-
-# IMAGE INPUT - DONT FORGET
-
-## 4.1 Préparation de donnees
-
-notre application commence par la préparation des données. Dans cette fenêtre, l'utilisateur pourra:
-
-- télécharger des fichiers de données (.csv / .tsv à ce stade de développement)
-- choisir la présence de "header", le séparateur et la citation
-- et enfin voir un aperçu rapide des données après avoir cliqué sur le bouton *"Upload"*.
-
-## 4.2 Statistiques Descriptives
-
-Après avoir téléchargé notre fichier de données dans l'application, dans la deuxième fenêtre, nous pourrons voir une statistique descriptive automatisée.
-
-Sur le premier graphique, nous pouvons voir la description des informations de base dans la classe de données d'entrée:
-
-**c'est la description du fonction, mais dans l'exapmle de notre appli quelques points sont absents. faut relire**
-
-- *lignes*: nombre de lignes
-- *colonnes*: nombre de colonnes
-- *discrete_columns*: nombre de colonnes discrètes
-- *colonnes_continues*: nombre de colonnes continues
-- *all_missing_columns*: nombre de colonnes avec tout ce qui manque
-- *total_missing_values*: nombre d'observations manquantes
-- *complete_rows*: nombre de lignes sans valeurs manquantes
-- *total_observations*: nombre total d'observations
-- *memory_usage*: allocation de mémoire estimée en octets
-
-Dans le plot du milieu, nous observons la fréquence des valeurs manquantes pour chaque entité. Il y a 4 groupes pour décrire la situation des valeurs manquantes.
-
-- *Good* : quand la proportion des valeurs manquantes $\leq$ 0.05
-- *OK* : 0.05 $<$ la proportion des valeurs manquante $\leq$ 0.4
-- *Bad* : 0.4 $<$ la proportion des valeurs manquante $\leq$ 0.8
-- *Remove* : 0.8 $<$ la proportion des valeurs manquante $\leq$ 1
-
-Et sur le graphique de droite, nous pouvons voir nos variables une par une. Si la variable se compose de données numériques, un boxplot sera généré, et dans le cas de données non numériques, nous verrons un barplot.
-
-Si dans le jeu de données des valeurs manquantes ont été trouvées, notre application vous proposera de faire l'imputation. Pour le moment, trois méthodes d'imputation sont disponibles:
-
-- pmm  */Predictive mean matching (Correspondance moyenne prédictive)/* : Il vise à réduire le biais introduit dans un ensemble de données par imputation, en tirant des valeurs réelles échantillonnées à partir des données.
-
-- norm : Calcule les imputations pour les données manquantes univariées par régression linéaire bayésienne, également connue sous le nom de modèle normal.
-
-- mean : Une autre technique d'imputation consiste à remplacer toute valeur manquante par la moyenne de cette variable pour tous les autres cas, ce qui présente l'avantage de ne pas modifier la moyenne de l'échantillon pour cette variable
-
-Après l'exécution, nous verrons une vue rapide de l'ensemble de données, où nous pouvons être assurés que les valeurs manquantes ont été imputées.
-
-## 4.3 ML Parameteres
-
-À cet étape, après avoir déjà téléchargé le fichier de données et effectué quelques statistiques descriptives, il est temps pour la première modélisation. Et tout d'abord, l'utilisateur aura la possibilité de choisir des paramètres pour les algorithmes souhaités. Donc, la troisième fenêtre de l'application dédiée aux hyperparamètres et autres spécificités.
-
-Premièrement, on est confrontés au choix entre la régression et la classification.
-
-***Rappel*** 
-```
-La classification est la tâche de prédire une étiquette de classe discrète.
-La régression consiste à prédire une quantité continue.
-```
-
-Ensuite, c'est le choix des hyperparamètres. Ici, les choix de l'utilisateur sont:
-
-- soit saisir les paramètres définis par les siens
-- soit laisser le package ***caret*** de R régler les hyperparamètres */parameter tuning/*
-
-&nbsp;\newline
-**Réglage des hyperparamètres avec caret**
-
-Avec l'application, un fichier .csv sera fourni avec les valeurs par défaut pour le réglage des hyperparamètres que vous pouvez voir ci-dessous.
-
-```{r echo=FALSE, message=FALSE, fig.cap="blbala"}
-
-require(kableExtra)
-tmp1 <- read.csv("../ML_BD/ML_Shiny/ressources/train_conf.csv", header=T, sep = ";")[,-1]
-kable(tmp1, booktabs = TRUE,caption = "Les valeurs par défaut pour le réglage des hyperparamètres") %>%
-    kable_styling(latex_options=c("scale_down", "hold_position"))
-
-```
-
-Comme on veux voir:
-
-- pour certains des algorithmes, comme *preProcessing*, les donnees sont centrees et reduites par defaut
-- les meilleurs parametres sont choisis en comparant le differents */Accuracy/*
-- la qualité des paramètres sera contrôlée par une validation croisée (10 fois) 
-- pour les algorithmes glmnet */Ridge et Lasso/* **$\alpha$** et les valeurs possibles de **$\lambda$** sont définies en complément.
-
-&nbsp;\newline
-**Réglage des hyperparamètres à la main**
-
-Si de toute façon l'utilisateur décide d'entrer ses propres paramètres, il doit choisir les algorithmes que l'on souhaite utiliser dans la partie intitulée "Algorithmes" et entrer les paramètres. Après exécution, dans une nouvelle fenêtre on peut voir le choix final des paramètres qui seront utilisés pour la partie principale de modélisation.
-
-
-## 4.4 ML Algorithme 
-
-Après avoir réglé/importé tous les hyperparamètres, il est temps de visualiser et de comparer la qualité et la précision des algorithmes pour les données.
-
-Ici, l'utilisateur aura la possibilité de :
-
-- choisir la variable d'interet 
-- confirmer l'option de validation croisée et les folds
-- varier la proportion de données d'apprentissage
-
-Ensuite, la comparaison de la précision et de kappa seront affichées sur l'application.
-
-![](img/bd.png){width=250px}
-
-
-
-
+# Conclusion (Komi)
