@@ -1,0 +1,8 @@
+use;name;method;preProc;trainMetric;trainControl;tuneGrid
+1;CART;rpart;;Accuracy;method = 'cv', number = 10;
+1;kNN;knn;center scale;Accuracy;method = 'cv', number = 10;
+1;randomForest;rf;;Accuracy;method = 'cv', number = 10;
+1;rfRanger;ranger;;Accuracy;method = 'cv', number = 10;
+1;XGBoost;xgbTree;;Accuracy;method = 'cv', number = 10;
+1;glmNetL1;glmnet;center scale;Accuracy;method = 'cv', number = 10;alpha = 1, lambda = seq(0, 0.5, 0.001)
+1;glmNetL2;glmnet;center scale;Accuracy;method = 'cv', number = 10;alpha = 0, lambda = seq(0, 0.5, 0.01)
