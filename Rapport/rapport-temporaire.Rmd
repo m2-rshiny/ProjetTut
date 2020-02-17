@@ -6,6 +6,7 @@ output:
 
 \begin{titlepage} 
 
+
     \newcommand{\HRule}{\rule{\linewidth}{1mm}}  
 
   \vspace*{1cm} 
@@ -334,9 +335,9 @@ kable(tmp1, booktabs = TRUE,caption = "Les valeurs par défaut pour le réglage 
 
 Comme on veux voir:
 
-- pour certains des algorithmes, une mise à centrée réduit sera proposée comme *preProcessing*.
-- la métrique de formation a été choisie precision */Accuracy/*
-- la qualité des paramètres sera contrôlée par une validation croisée 10 fois 
+- pour certains des algorithmes, comme *preProcessing*, les donnees sont centrees et reduites par defaut
+- les meilleurs parametres sont choisis en comparant le differents */Accuracy/*
+- la qualité des paramètres sera contrôlée par une validation croisée (10 fois) 
 - pour les algorithmes glmnet */Ridge et Lasso/* **$\alpha$** et les valeurs possibles de **$\lambda$** sont définies en complément.
 
 &nbsp;\newline
@@ -357,7 +358,7 @@ Ici, l'utilisateur aura la possibilité de :
 
 Ensuite, la comparaison de la précision et de kappa seront affichées sur l'application.
 
-
+![](img/bd.png){width=250px}
 
 
 
