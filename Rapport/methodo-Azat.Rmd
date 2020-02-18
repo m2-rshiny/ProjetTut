@@ -1,19 +1,89 @@
 ---
-title: "Untitled"
-author: "Azat ALEKSANYAN"
-date: "2/9/2020"
 output: 
     pdf_document:
         toc: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
-\newpage
+# 3. Méthodologie (Azat)
 
-# Méthodologie
+## 3.1 Pré-traitement des données
+
+Le prétraitement des données est une technique d'exploration de données qui consiste à transformer des données brutes dans un format compréhensible. Les données réelles sont souvent incomplètes, incohérentes et sont susceptibles de contenir de nombreuses erreurs.
+
+### 3.1.1 Pré-traitements classiques
+
+**Center scale**
+
+Une variable centrée réduite est la transformée d'une variable aléatoire par une application affine
+
+- Centrer une variable consiste à soustraire son espérance à chacune de ses valeurs initiales, soit retrancher à chaque donnée la moyenne
+- Réduire une variable consiste à diviser toutes ses valeurs par son écart type.
+
+Une variable centrée réduite $x$ est calculée par: $x = \frac {X-\mu}{\sigma}$
+
+**One hot encoding** 
+
+"One hot encoding" est un processus par lequel les variables catégorielles sont converties en une forme qui pourrait être fournie aux algorithmes ML pour faire un meilleur travail de prédiction. Donc, il encode les caractéristiques catégorielles sous la forme de tableau numérique *one-hot*.
+
+Exemple: on a une variable «couleur», il y a 3 catégories *(vert, bleu, noir)* et donc 3 variables binaires sont nécessaires. Une valeur «1» est placée dans la variable binaire pour la bonne couleur et des valeurs «0» pour les autres couleurs.
+
+# ???
+
+**Model Matrix** 
+
+La fonction de R *model.matrix* crée une matrice de conception (ou de modèle), par exemple, en étendant les facteurs à un ensemble de variables fictives (en fonction des contrastes) et en élargissant les interactions de manière similaire.
+
+### 3.1.2 Imputation des données manquantes
+
+Si dans le jeu de données des valeurs manquantes ont été trouvées, notre application vous proposera de faire l'imputation. L'imputation multivariée par équations chaînées */Multivariate imputation by chained equations(MICE)/* est couramment utilisée pour imputer les données manquantes. Nous avons utilisé le package éponyme en R pour implémenter les imputations. Pour le moment, ces méthodes d'imputation sont disponibles:
+
+- pmm  */Predictive mean matching (Correspondance moyenne prédictive)/* : Il vise à réduire le biais introduit dans un ensemble de données par imputation, en tirant des valeurs réelles échantillonnées à partir des données.
+
+- norm : Calcule les imputations pour les données manquantes univariées par régression linéaire bayésienne, également connue sous le nom de modèle normal.
+
+- mean : Une autre technique d'imputation consiste à remplacer toute valeur manquante par la moyenne de cette variable pour tous les autres cas, ce qui présente l'avantage de ne pas modifier la moyenne de l'échantillon pour cette variable
+
+- rf : L'imputation de la forêt aléatoire est une technique d'apprentissage automatique qui peut prendre en charge les non-linéarités et les interactions et ne nécessite pas de modèle de régression particulier à spécifier
+
+## 3.2 Echantillonnage - Optimisation du modèle
+
+### 3.2.1 Découpage des données
+
+Quand on dit optimisation du modèle, on parle d'optimisation des hyper-paramètres, c'est-à-dire trouver le bon niveau de complexité du modèle. Il y a deux possibilités: l'utilisation d’un jeu de validation et l'utilisation de techniques de validation croisée. Au préalable, on définit un jeu de test pour évaluer les performances du modèle *(une fois optimisé)*.
+
+![](img/valid.png){width=300px}
+
+Et avec jeu de validation on suit ces étapes:
+
+- construire les différents modèles sur le jeu train 
+- évaluer leurs performances sur le jeu de validation 
+- choisir les meilleurs hyperparamètres 
+- construire le modèle final sur {train + validation } 
+- estimer les performance sur le jeu de test
+
+C'est le cas le plus simple.
+
+### 3.2.2 Validation croisée
+
+Princip de validation croisée est: 
+
+- on découpe les données d’apprentissage en K parties - les folds *(les données de test sont toujours de côté)*
+- pour k = 1, ..., K
+  - fold k = données de validation
+  - autres folds = données d’apprentissage
+- pour $k = 1 \ a \ K$, il faut :
+  - mettre de côté la $k-ième$ fold
+  - apprendre le modèle sur les $K - 1$ folds restantes
+  - appliquer le modèle sur les données de la $k - ième$ fold
+
+A la fin, on évalue les performances du modèle.
+
+Ici, on évalue les performances sur tout le jeu d’apprentissage
+
+![](img/cv1.png){width=400px}
+
+## 3.3 Algorithmes d'apprentissage automatique
 
 Afin de répondre au mieux à notre problématique nous avons fait le choix d’utiliser plusieurs algorithms différentes pour analyser nos données.
 
@@ -60,10 +130,13 @@ Un arbre de régression fait référence à un algorithme dans lequel se trouve 
 
 À chacun de ces points, l’erreur entre les valeurs prédites et les valeurs réelles est mise au carré pour obtenir une «somme des erreurs au carré» (SEC). Le SEC est comparée entre les variables et la variable ou le point qui a le SEC le plus bas est choisi comme point de partage. Ce processus se poursuit récursivement.
 
-## rfRanger ???
 ## Random Forest
 
 À la base, la méthode des forêts aléatoires est basée sur le bagging /aggrégation par bootstrap/, il est très performant sur de nombreux problèmes et facile à paramétrer. Principe d’algorithmes et de découper l’espace d’entrée en région, estimer et prédire une valeur par région. Pour la régression on choisit une valeur moyenne dans la région, et pour la classification on choisit la classe majoritaire. Les avantages de cette méthode sont l’interprétabilité du modèle et le mécanisme de prédiction proche du processus humain.
+
+## rfRanger
+
+Ranger est une implémentation rapide de forêts aléatoires ou partitionnement récursif, particulièrement adapté aux données de grande dimension. Les forêts de classification, de régression et de survie sont prises en charge. Les forêts de classification et de régression sont mises en œuvre comme dans la forêt aléatoire d'origine, les forêts de survie comme dans les forêts de survie aléatoire.
 
 ## XGBoost
 
@@ -115,19 +188,16 @@ AdaBoost est désigné comme adaptatif car il utilise de nombreuses itérations 
 
 AdaBoost.M1 represente les algorithmes originaux de classification binaire.
 
+## 3.4 Programmation
 
-## Optimisation du modèle - Validation Croisée
+### 3.4.1 Caret
 
-L’optimisation du modèle signifie l’optimisation hyperparamétrique, c’est-à-dire il faut trouver le bon niveau de complexité du modèle, qui est en général difficile de choisir a priori. Pour l’optimisation on utilise la methode de la validation croissee.
+Le package caret *(abréviation de Classification And REgression Training)* est un ensemble de fonctions qui tentent de rationaliser le processus de création de modèles prédictifs. Le package contient des outils pour:
 
-Au préalable, on définit un jeu de test pour évaluer les performances du modèle. Ensuite, on découpe led’apprentissage en K parties - les folds.
+- découpage des données
+- prétraitement
+- sélection de fonctionnalité
+- réglage du modèle */tuning/* à l'aide du rééchantillonnage
+- estimation d'importance variable ainsi que d'autres fonctionnalités.
 
-pour $k = 1 \ a \ K$, il faut :
-
-- mettre de côté la $k-ième$ fold
-- apprendre le modèle sur les $K - 1$ folds restantes
-- appliquer le modèle sur les données de la $k - ième$ fold
-
-A la fin, on évalue les performances du modèle.
-
-![Validation Croisée](img/cv.png){width=200px}
+### 3.4.2 Tidyverse (Mamadou)
