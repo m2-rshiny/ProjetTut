@@ -72,9 +72,9 @@ output:
 
 # Remerciements
 
-Nous tenons à remercier particulièrement Monsieur Didier Morel pour leur aide, leur disponibilité et leur écoute tout au long du projet.
+Nous tenons à remercier particulièrement Monsieur Didier Morel pour son aide, sa disponibilité et son écoute tout au long du projet.
 
-Nous remercions aussi le BD pour la confiance qu'ils nous ont accordé avec ce projet.
+Nous remercions aussi son entreprise BD pour la confiance qu'ils nous ont accordés avec ce projet.
 
 \newpage
 
@@ -85,61 +85,63 @@ Nous remercions aussi le BD pour la confiance qu'ils nous ont accordé avec ce p
 
 # 1. Introduction
 
-Dans le cadre de notre préparation au diplôme de master en statistiques et sciences de données, nous avons été amenés à effectuer notre projet de cinquième année en partenariat avec l'entreprise BD (Becton et Dickinson) et sous l'encadrement de Didier Morel.
+Dans le cadre de notre préparation au diplôme de master 2 en statistiques et sciences de données, nous avons été amenés à effectuer notre projet tutoré en partenariat avec l'entreprise BD (Becton et Dickinson) sous la tutelle de Didier Morel.
  
-Il concerne le développement d'une application RShiny permettant de comparer et de tester des algorithmes de Machine Learning. Dans la mesure où l'entreprise BD ne dispose d'aucune application en ligne permettant de réaliser ce type de travail, il semble très intéressant de mettre en place un tel outil. Ainsi, les expérimentés comme les personnes sans trop de connaissances en apprentissage automatique pourront se servir de l'application pour avoir un aperÃ§u de  l'efficacité de différentes méthodes.
+Il concerne le développement d'une application RShiny permettant de comparer et de tester des algorithmes de Machine Learning. Dans la mesure où l'entreprise BD ne dispose d'aucune application permettant de réaliser ce type de travail, il semble très intéressant de mettre en place un tel outil. Ainsi, les expérimentés tout comme les personnes sans trop de connaissances en apprentissage automatique pourront s'en servir pour avoir un aperçu de l'efficacité des différentes méthodes.
 
-Dans ce projet, après avoir identifié le contexte, les besoins et les contraintes, nous avons procédé à la construction de notre application en créant deux fichiers dont un pour le serveur et le second pour l'interface utilisateur. Nous avons implémenté dans notre application, des algorithmes de classification supervisée et de régression comme AdaBoost Classification Trees, AdaBoost.M1, CART, les k plus proches voisins (kNN), le randomForest, RfRanger, XGBoost, Ridge, Lasso. Pour ces différents algorithmes, l'utilisateur a la possibilité de choisir les paramètres voulus. Nous avons ensuite procédé aux tests sur des jeux de données afin de comparer la performance des différents algorithmes de classification supervisée et de régression. Il faut noter aussi que notre application est capable de charger les jeux de données de type CSV et TSV.
+Dans ce projet, après avoir identifié les besoins et les contraintes, nous avons procédé à la construction de notre application en créant plusieurs fichiers gérant l'interface utilisateur et les traitements côté serveur. Nous avons implémenté dans notre application, des algorithmes de classification supervisée et de régression comme AdaBoost Classification Trees, CART, les k plus proches voisins (kNN), etc... Pour ces différents algorithmes, l'utilisateur a la possibilité de choisir les hyper-paramètres. Nous avons ensuite procédé aux tests sur des jeux de données afin de comparer la performance des différents algorithmes.
 
 \newpage
 
 # 2. Contexte
 
-L’évolution des techniques de fouilles de données et d'apprentissage automatique, ainsi que l’accroissement des capacités de stockage et de calcul suscite, dans tous les domaines, un intérêt pour les données produites. En ce sens, les domaines dans lesquels intervient l'entreprise BD ne font pas exception. Notre projet s'inscrivant dans ce contexte, cette application est destinée à devenir un outil d’investigation rapide utilisable en interne par des collaborateurs BD en possession de jeux de données sur lesquels ils souhaiteraient pouvoir obtenir une idée rapide de la performance de différents types de modèles de prédictions.
+L’évolution des techniques de fouilles de données et d'apprentissage automatique, ainsi que l’accroissement des capacités de stockage et de calcul suscite, dans tous les domaines, un intérêt pour l'analyse de données massives. En ce sens, les domaines dans lesquels intervient l'entreprise BD ne font pas exception. Notre projet s'inscrivant dans ce contexte, cette application est destinée à devenir un outil d’investigation rapide utilisable en interne par des collaborateurs BD en possession de jeux de données sur lesquels ils souhaiteraient pouvoir obtenir une idée rapide de la performance de différents types de modèles de prédictions.
 
 # 3. Méthodologie
 
 ## 3.1 Pré-traitement des données
 
-Le prétraitement des données est une technique d'exploration de données qui consiste à transformer des données brutes dans un format compréhensible. Les données réelles sont souvent incomplètes, incohérentes et sont susceptibles de contenir de nombreuses erreurs.
+Le prétraitement des données est une technique utilisée en fouille de données qui consiste à transformer les données brutes dans un format exploitable. Les données réelles sont souvent incomplètes, incohérentes et sont susceptibles de contenir de nombreuses erreurs.
 
 ### 3.1.1 Pré-traitements classiques
 
-**Center scale**
+**Données centrées réduites**
 
 Une variable centrée réduite est la transformée d'une variable aléatoire par une application affine
 
-- Centrer une variable consiste à soustraire son espérance à chacune de ses valeurs initiales, soit retrancher à chaque donnée la moyenne
+- Centrer une variable consiste à soustraire son espérance à chacune de ses valeurs initiales, soit retrancher à chaque valeur la moyenne
 - Réduire une variable consiste à diviser toutes ses valeurs par son écart type.
 
 Une variable centrée réduite $x$ est calculée par: $x = \frac {X-\mu}{\sigma}$
 
 **One hot encoding** 
 
-"One hot encoding" est un processus par lequel les variables catégorielles sont converties en une forme qui pourrait être fournie aux algorithmes ML pour faire un meilleur travail de prédiction. Donc, il encode les caractéristiques catégorielles sous la forme de tableau numérique *one-hot*.
+"One hot encoding" est un processus par lequel les variables catégorielles sont converties en une forme qui pourrait être fournie aux algorithmes d'apprentissage automatique intolérents aux données catégorielles pour faire un meilleur travail de prédiction. Il encode les caractéristiques catégorielles sous la forme de tableau numérique *one-hot*, c'est à dire qu'il transforme une variable catégorielle en un tableau disjonctif complet comportant autant de variables que de modalités.
 
-La fonction *model.matrix* en *R* crée une matrice de conception (ou de modèle), par exemple, en étendant les facteurs à un ensemble de variables fictives (en fonction des contrastes) et en élargissant les interactions de manière similaire.
+La fonction *model.matrix* en *R* permet de créer ce tableau disjonctif complet décrit précédemment.
 
-Exemple: on a une variable «couleur», il y a 3 catégories *(vert, bleu, noir)* et donc 3 variables binaires sont nécessaires. Une valeur «1» est placée dans la variable binaire pour la bonne couleur et des valeurs «0» pour les autres couleurs.
+Exemple: on a une variable «couleur» comportant 3 classes *(vert, bleu, noir)* et donc 3 variables binaires sont nécessaires. Une valeur «1» est placée dans la variable binaire pour la couleur correspondante à l'observation, «0» pour les variables des autres couleurs.
 
 ### 3.1.2 Imputation des données manquantes
 
-Si dans le jeu de données des valeurs manquantes ont été trouvées, notre application vous proposera de faire l'imputation. L'imputation multivariée par équations chaînées */Multivariate imputation by chained equations(MICE)/* est couramment utilisée pour imputer les données manquantes. Nous avons utilisé le package éponyme en R pour implémenter les imputations. Pour le moment, ces méthodes d'imputation sont disponibles:
+L'imputation de données manquantes est un processus important en fouille de données, il permet d'éviter de se passer de trop d'information. Plusieurs méthodes d'imputation existent.
 
-- rf: imputation par random forest 
+L'imputation multivariée par équations chaînées */Multivariate imputation by chained equations(MICE)/* est couramment utilisée pour imputer les données manquantes. Nous avons utilisé le package éponyme en R pour implémenter les imputations. Nous avons utilisé les méthodes suivantes :
+
+- rf: imputation par forêt aléatoire
 - pmm  */Predictive mean matching (Correspondance moyenne prédictive)/* : Il vise à réduire le biais introduit dans un ensemble de données par imputation, en tirant des valeurs réelles échantillonnées à partir des données.
 - norm : Calcule les imputations pour les données manquantes univariées par régression linéaire bayésienne, également connue sous le nom de modèle normal.
-- mean : Une autre technique d'imputation consiste à remplacer toute valeur manquante par la moyenne de cette variable pour tous les autres cas, ce qui présente l'avantage de ne pas modifier la moyenne de l'échantillon pour cette variable
+- mean : Une autre technique d'imputation qui consiste à remplacer toute valeur manquante par la moyenne de cette variable pour tous les autres cas, ce qui présente l'avantage de ne pas modifier la moyenne de l'échantillon pour cette variable
 
 ## 3.2 Echantillonnage - Optimisation du modèle
 
 ### 3.2.1 Découpage des données
 
-Quand on dit optimisation du modèle, on parle d'optimisation des hyper-paramètres, c'est-à-dire trouver le bon niveau de complexité du modèle. Il y a deux possibilités: l'utilisation d’un jeu de validation et l'utilisation de techniques de validation croisée. Au préalable, on définit un jeu de test pour évaluer les performances du modèle *(une fois optimisé)*.
+Afin d'optimiser la capacité de généralisation du modèle, il est important de procéder à l'optimisation des hyper-paramètres. Ceci passe par l'utilisation d’un jeu de validation et l'utilisation de techniques de validation croisée. Au préalable, on définit un jeu de test pour évaluer les performances du modèle *(une fois optimisé)*.
 
 ![](img/valid.png){width=300px}
 
-Et avec jeu de validation on suit ces étapes:
+Avec un jeu de validation on suit ces étapes:
 
 - construire les différents modèles sur le jeu train 
 - évaluer leurs performances sur le jeu de validation 
@@ -151,42 +153,42 @@ C'est le cas le plus simple.
 
 ### 3.2.2 Validation croisée
 
-Princip de validation croisée est: 
+Le principe de la validation croisée est le suivant : 
 
-- on découpe les données d’apprentissage en K parties - les folds *(les données de test sont toujours de côté)*
-- pour k = 1, ..., K
-  - fold k = données de validation
-  - autres folds = données d’apprentissage
-- pour $k = 1 \ a \ K$, il faut :
-  - mettre de côté la $k-ième$ fold
-  - apprendre le modèle sur les $K - 1$ folds restantes
-  - appliquer le modèle sur les données de la $k - ième$ fold
+- Découpage de l'échantillon d'apprentissage en k-partitions
+- pour chacune des k partitions :
+  - l'une d'entre elles sert de données de validation
+  - les autres servent de données d'apprentissage
+- De manière pratique : pour chacune des $K$ partitions, il faut :
+  - mettre de côté la $k-ième$ partition
+  - apprendre le modèle sur les partitions restantes
+  - tester le modèle sur les données de la $k - ième$ partition
 
 A la fin, on évalue les performances du modèle.
 
-Ici, on évalue les performances sur tout le jeu d’apprentissage
+Ainsi, on évalue les performances sur tout le jeu d’apprentissage et on évite le sur-apprentissage
 
-![](img/cv1.png){width=400px}
+![](img/cv.png){width=400px}
 
 ## 3.3 Algorithmes d'apprentissage automatique
 
-Afin de répondre au mieux à notre problématique nous avons fait le choix d’utiliser plusieurs algorithms différentes pour analyser nos données.
+De nombreux algorithmes d'apprentissage automatiques existent et certains se ressemblent beaucoup. Là est l'intérêt de notre application qui mettra en évidence la différence de performance entre deux agorithmes à priori similaires. Voici quelques exemples d'algorithmes proposés par la librairie caret.
 
-**kNN /k-ppv/**
+**kNN**
 
-L’algorithme des kNN consiste a trouver est les $k$ observations $x_i$ les plus proches de l’observation $x'$ a classifier. Ensuite, il faut definir $f(x')$ en fonction des reponses $y_i$ des kNN. Pour la regression c’est la valeur moyenne et pour la classification - la vote majoritaire. Les questions ouvertes pour cette algorithme est la choix du **critere de distance** et de la **valeur de k**.
+L’algorithme des kNN consiste a trouver les $k$ observations $x_i$ les plus proches de l’observation $x'$ à classifier. Ensuite, il faut definir $f(x')$ en fonction des réponses $y_i$ des kNN. Pour la régression, c’est la valeur moyenne qui est affectée et pour la classification, c'est la classe majoritaire. Les hyper-paramètres de cet algorithme sont le choix du **critere de distance** et de le nombre de **k-voisins**.
 
-- kNN pour la regression:
+- kNN pour la régression:
 
 $$\tilde{f}(x)=moyenne(y_i | i \in N_k(x))$$
-$$\Rightarrow  \text{approxime directement la fonction de regression} \ E[Y|X]$$
+$$\Rightarrow  \text{approxime directement la fonction de régression} \ E[Y|X]$$
 
 **Nature de l’approximation**
 
 1. espérance $\rightarrow$ moyenne empirique
 2. valeur ponctuelle $\rightarrow$ voisinage (dans le conditionnement)
 
-- kNN pout la classification:
+- kNN pour la classification:
 
 $$\tilde{f}(x)=majorite(y_i|i \in N_k(x))=arg \underset{l=1,\dots, K}{max} \tilde{P}_l=\frac{1}{k} \sum_{i \in N_k(x))} 1 (y_i=l)$$
 $$\Rightarrow \text{approxime directement le classifieur de Bayes:}$$
@@ -273,7 +275,7 @@ AdaBoost est désigné comme adaptatif car il utilise de nombreuses itérations 
 
 AdaBoost.M1 represente les algorithmes originaux de classification binaire.
 
-## 3.4 Programmation
+## 3.4 Outils R de programmation
 
 ### 3.4.1 Caret
 
@@ -287,11 +289,11 @@ Le package caret *(abréviation de Classification And REgression Training)* est 
 
 ### 3.4.2 Tidyverse
 
-Le tidyverse est un système cohérent de packages pour la manipulation, l'exploration et la visualisation de données qui partagent une philosophie de conception commune. Ceux-ci ont été principalement développés par Hadley Wickham lui-même, mais ils sont maintenant développés par plusieurs contributeurs. Les packages Tidyverse sont destinés à rendre les statisticiens et les scientifiques des données plus productifs en les guidant à travers des flux de travail qui facilitent la communication et aboutissent à des produits de travail reproductibles. Fondamentalement, l'inverse concerne les connexions entre les outils qui rendent le workflow possible.
+Tidyverse est un système cohérent de packages pour la manipulation, l'exploration et la visualisation de données qui partagent une philosophie de conception commune. Ceux-ci ont été principalement développés par Hadley Wickham lui-même, mais ils sont maintenant développés par plusieurs contributeurs. Les packages Tidyverse sont destinés à rendre les statisticiens et les scientifiques des données plus productifs en les guidant à travers des flux de travail qui facilitent la communication et aboutissent à des produits de travail reproductibles. Fondamentalement, l'inverse concerne les connexions entre les outils qui rendent le workflow possible.
 
 # 4. Présentation de l'application
 
-Notre application web est constituée d'un menu  constitué de plusieurs permettant de contrôler chaque étape du processus de machine learning.
+Notre application web est constituée d'un menu  constitué de plusieurs onglets permettant de contrôler chaque étape du processus de machine learning.
 
 ## 4.1 Présentation succinte de Shiny
 
@@ -334,9 +336,9 @@ Ci-dessous une capture d'écran de l'application avec un exemple à l'appui.
 
 Le premier onglet de notre application permet à l'utilisateur d'importer le jeu de données sur lequel il souhaite tester les différents algorithmes d'apprentissage automatique.
 
-Les fichiers acceptés sont les fichiers texte avec séparateur (csv/tsv). L'utilisateur peut choisir le séparteur, le caractère de citation, préciser s'il y a une ligne d'entête et visualiser les premières lignes du jeu de données importé.
+Les fichiers acceptés sont les fichiers texte avec séparateur. L'utilisateur peut choisir le séparteur, le caractère de citation, préciser s'il y a une ligne d'entête et visualiser les premières lignes du jeu de données importé.
 
-Nous avons décidés d'imposer à l'utilisateur de cliquer sur un bouton pour importer ses données une fois les paramètres d'importation remplis. Nous avons fait ce choix pour éviter à l'application de se mettre à jour dès que l'utilisateur change un paramètre, cela peut prendre beaucoup de temps pour des jeux de données trop volumineux. Ce bouton permet donc de rendre l'onglet plus fluide.
+Nous avons décidé d'imposer à l'utilisateur de cliquer sur un bouton pour importer ses données une fois les paramètres d'importation remplis. Nous avons fait ce choix pour éviter à l'application de se mettre à jour dès que l'utilisateur change un paramètre, cela peut prendre beaucoup de temps pour des jeux de données trop volumineux. Ce bouton permet donc de rendre l'onglet plus fluide.
 
 ### 4.4.2 Statistiques Descriptives
 
@@ -377,7 +379,7 @@ Après avoir téléchargé le fichier de données et effectué quelques statisti
 
 #### 4.4.3.1 Choix des algorithmes
 
-Notre objectif était ici de permettre à l'utilisateur de choisir de manière simple, un ou plusieur algorithmes à tester sur son jeu de données. Le problème est que la librairie Caret de R propose une énorme quantité d'algorithmes de classification et de régression. Il n'était donc pas pensable d'écrire cette liste en dur dans le code. Nous avons plutôt choisi d'en enregistrer une liste dans un tableau csv. Ce tableau comporte le nom de l'algorithme et son allias à saisir dans les fonctions de caret pour y faire référence. Ainsi, l'administrateur de l'application pourra ajouter ou supprimer des algorithmes de cette liste. Cette liste est celle qui est proposée dans l'interface utilisateur au travers d'un menu déroulant à choix multiple.
+Notre objectif était ici de permettre à l'utilisateur de choisir de manière simple, un ou plusieur algorithmes à tester sur son jeu de données. Le problème est que la librairie Caret de R propose une énorme quantité d'algorithmes de classification et de régression. Il n'était donc pas pensable d'écrire cette liste en dur dans le code. Nous avons plutôt choisi d'en enregistrer une liste dans un fichier JSON. Ce fichier liste les détails de chaque algorithme(nom, hyper-paramètres, description, etc...). Ainsi, l'administrateur de l'application pourra ajouter ou supprimer des algorithmes de cette liste. Cette liste est celle qui est proposée dans l'interface utilisateur au travers d'un menu déroulant à choix multiple.
 
 #### 4.4.3.2 Paramétrisation des algorithmes
 
@@ -403,7 +405,7 @@ Voici une version simplifiée de notre algorithme derrière l'objet *uiOutput* p
 
 ---> Fin Pour
 
-Nous avons pu récupérer de maière automatique la liste des hyper-paramètres possibles pour chaque algorithme grâce à la fonction *getModelInfo()* de la librairie caret.
+Nous avons pu récupérer de manière automatique la liste des hyper-paramètres possibles pour chaque algorithme grâce à la fonction *getModelInfo()* de la librairie caret.
 
 La fonction *train()* de caret, avec laquelle nous entraînons nos algorithmes permet grâce à l'un de ses paramètres d'appliquer un ou plusieurs pré-traitement(s) sur les données. La liste des pré-traitements est assez courte, nous l'avons donc réécrite en dur dans le code pour proposer l'utilisateur de choisir les pré-traitements à appliquer pour chaque algorithme.
 
@@ -443,9 +445,9 @@ Et pour chaque modèle, si l'utilisateur choisit de tester un paramètre avec pl
 
 ### Problématiques
 
-Un des objectifs du projet était de réaliser une application qui soit à la fois *facilement extensible*, et *facilement maintenable*. Le problème est que le code d'une application Shiny peut très vite devenir illible si l'on reste sur le découpage traditionnel en deux fichiers, c'est-à-dire un fichier `ui.R` pour l'interface graphique et un fichier `server.R` pour le traitement des données côté serveur. D'autres contraintes s'ajoutent également, que l'on peut résumer par les points suivants :
+Un des objectifs du projet était de réaliser une application qui soit à la fois *facilement extensible*, et *facilement maintenable*. Le problème est que le code d'une application Shiny peut très vite devenir illisible si l'on reste sur le découpage traditionnel en deux fichiers, c'est-à-dire un fichier `ui.R` pour l'interface graphique et un fichier `server.R` pour le traitement des données côté serveur. D'autres contraintes s'ajoutent également, que l'on peut résumer par les points suivants :
 
-* **Code source difficile à lire** : dans le code, toutes les fonctionnalités de l'application sont mélangés au même endroit, il est alors difficile de retrouver le code correspondant à fonctionnalité, que ce soit ses éléments graphiques, ou le traitement associé. De même, il peut arriver que le code de traitement côté serveur soit mélangé avec le code pour générer l'interface graphique (par exemple, dans le cas où on générerait une interface réactive). On aimerait donc pouvoir diviser le code en plusieurs modules, afin de regrouper au sein d'une même structure le code associé à chaque fonctionnalité ;
+* **Code source difficile à lire** : dans le code, toutes les fonctionnalités de l'application sont mélangés au même endroit, il est alors difficile de retrouver le code correspondant à la fonctionnalité, que ce soit ses éléments graphiques, ou le traitement associé. De même, il peut arriver que le code de traitement côté serveur soit mélangé avec le code pour générer l'interface graphique (par exemple, dans le cas où on générerait une interface réactive). On aimerait donc pouvoir diviser le code en plusieurs modules, afin de regrouper au sein d'une même structure le code associé à chaque fonctionnalité ;
 * **Aucun mécanisme pour gérer efficacement les identifiants des éléments graphiques (ou *widgets*)** : dans une application Shiny, chaque widget possède un identifiant, il peut arriver facilement que l'on donne par maladresse le même identifiant pour des widgets qui font la même chose, mais qui se situent chacun dans un contexte différent. On aimerait donc disposer d'un système d'espace de noms pour pouvoir éviter ces conflits ;
 * **Aucune contrainte d'accès pour chaque fonctionnalité** : chaque fonctionnalité à accès à toutes les données de l'application, ce qui peut être difficile à déboguer si, par exemple, un élément graphique modifie un comportement du programme auquel il ne devrait pas avoir accès. On aimerait donc pouvoir limiter et contrôler l'accès aux données de chaque fonctionnalité ;
 * **Application difficilement extensible** : conséquence des points précédents.
