@@ -1,0 +1,24 @@
+---
+title: "asdjflersar"
+author: "Soheil Salmani"
+date: "19/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Préparation des données
+
+L'application propose des outils graphiques pour pré-traiter les données importées avant de les transmettre à `caret`, à savoir :
+
+* Sélectionner, arranger et filtrer les données à partir d'un champ textuel. La syntaxe de ces différentes opérations est présenté ci-dessous :
+  * sélectionner et réarranger plusieurs colonnes : `var10, var1:9` ;
+  * supprimer une colonne : `-var1` ;
+  * filter les données : `var1 > 100`.
+* Modifier le type d'une ou plusieurs colonnes. Nous proposons ici les types (`logical`, `double`, `int`, `character` et `factor`) ;
+* Renommer les colonnes du dataset ;
+* Construire une nouvelle variable à partir des autres (par exemple en écrivant `(var1 + var2) / 100`).
+
+Ces fonctionnalités sont purement basés sur les fonctions proposés par Tidyverse, et sont applicables récursivement : on peut appliquer un pré-traitement pour obtenir un dataset temporaire, et y appliquer un autre traitement par la suite, et ainsi de suite jusqu'à l'obtention du dataset voulu. Un bouton permet également, à tout moment, de revenir au dataset original.
