@@ -1,6 +1,11 @@
-# By default, the file size limit is 5MB. It can be changed by setting this
-# option. Here we'll raise limit to 9MB.
-options(shiny.maxRequestSize = 30 * 1024^2)
+# By default, the file size limit is 5 MB. It can be changed by setting this
+# option. Here we'll raise limit to 50 MB.
+options(shiny.maxRequestSize = 50 * 1024^2)
+
+# SHINY SUBMODULES #############################################################
+
+source("bd-shiny-modules/data-importation-submodules/built-in-dataset-importation.R")
+source("bd-shiny-modules/data-importation-submodules/external-dataset-importation.R")
 
 # SHINY UI #####################################################################
 
@@ -10,34 +15,14 @@ data_importation_ui <- function(id) {
 
   # UI ELEMENTS ################################################################
 
-  # File input element
-  file_input <- fileInput(
-    inputId = ns("fileInput"),
-    label = "Select a file",
-    accept = c("text/csv", ".csv")
-  )
-
-  # Checkbox element to indicate if there is a header
-  has_header <- checkboxInput(
-    inputId = ns("hasHeader"),
-    label = "Header",
-    value = TRUE
-  )
-
-  # Radio buttons to select the separator character
-  sep_selected <- radioButtons(
-    inputId = ns("sepSelected"),
-    label = "Separator",
-    choices = c("Comma" = ",", "Semicolon" = ";", "Tab" = "\t"),
-    selected = "\t"
-  )
-
-  # Radio buttons to select the quote character
-  quote_selected <- radioButtons(
-    inputId = ns("quoteSelected"),
-    label = "Quote",
-    choices = c("None" = "", '"' = '"', "'" = "'"),
-    selected = "'"
+  # Input to select whether we want to import an external or built-in dataset
+  data_source <- radioButtons(
+    inputId = ns("selectSource"),
+    label = "Would you like to import a built-in dataset or one from an external file?",
+    choices = list(
+      "Built-in dataset" = "builtInDataset",
+      "External dataset" = "externalDataset"
+    )
   )
 
   # Button to load data
@@ -45,26 +30,32 @@ data_importation_ui <- function(id) {
 
   # DataTable output
   datatable_output <- dataTableOutput(ns("datatable"))
+  
+  # Tibble output
+  tibble_output <- verbatimTextOutput(ns("tibble"))
 
   # UI LAYOUTS ####################################################################
 
   # Sidebar panel
   sidebar_panel <- sidebarPanel(
-    file_input,
+    data_source,
     tags$hr(),
-    has_header,
-    sep_selected,
-    quote_selected,
+    uiOutput(ns("sourceSelected")),
     load_data_button
   )
 
   # Main panel
-  main_panel <- mainPanel(datatable_output)
+  main_panel <- mainPanel(
+    h4("Dataset"),
+    datatable_output,
+    h4("More details"),
+    tibble_output
+  )
 
   # Sidebar layout
   sidebar_layout <- sidebarLayout(sidebar_panel, main_panel)
 
-  # Return UI
+  # Return the UI
   tagList(
     h3("Data Importation"),
     hr(),
@@ -75,30 +66,40 @@ data_importation_ui <- function(id) {
 # SERVER LOGIC #################################################################
 
 data_importation <- function(input, output, session) {
+  # Namespace
+  ns <- session$ns
+  
+  # UI to be displayed according to the selected data source
+  import_built_in_dataset_ui <- built_in_dataset_importation_ui(ns("builtIn"))
+  import_external_dataset_ui <- external_dataset_importation_ui(ns("external"))
+  
+  # Render the UI according to the selected data source
+  output$sourceSelected <- renderUI({
+    switch(input$selectSource,
+      "builtInDataset" = import_built_in_dataset_ui,
+      "externalDataset" = import_external_dataset_ui
+    )
+  })
+
   # Store the dataset imported
   data_imported <- eventReactive(input$loadDataButton, {
-    # Input file element
-    file_input <- input$fileInput
-
-    # If there isn't input file
-    if (is.null(file_input)) {
-      return(NULL)
-    }
-
-    # Read the uploaded dataset
-    df <- read.csv(
-      file = file_input$datapath,
-      header = input$hasHeader,
-      sep = input$sepSelected,
-      quote = input$quoteSelected
+    dataset <- switch(input$selectSource,
+      "builtInDataset" = callModule(built_in_dataset_importation, "builtIn"),
+      "externalDataset" = callModule(external_dataset_importation, "external")
     )
-
-    # Return the dataset
-    return(df)
+    as_tibble(dataset())
   })
 
   # DataTable to display
   output$datatable <- renderDataTable({
+    datatable(data_imported(), options = list(scrollX = TRUE))
+  })
+  
+  # Tibble to display
+  output$tibble <- renderPrint({
     data_imported()
   })
+
+  # Return the tibble
+  data_imported
 }

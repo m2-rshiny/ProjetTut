@@ -1,0 +1,12 @@
+{
+  "AdaBoost Classification Trees (adaboost)": "adaboost",
+  "AdaBoost.M1 (AdaBost.M1)": "AdaBoost.M1",
+  "Adaptive Mixture Discriminant Analysis (amdai)": "amdai",
+  "Adaptive-Network-Based Fuzzy Inference System (ANFIS)": "ANFIS",
+  "Adjacent Categories Probability Model for Ordinal Data (vglmAdjCat)": "vglmAdjCat",
+  "Bagged AdaBoost (AdaBag)": "AdaBag",
+  "CART (rpart)": "rpart",
+  "k-Nearest Neighbors (knn)": "knn",
+  "Random Forest (rf)": "rf",
+  "eXtreme Gradient Boosting (xgbTree)": "xgbTree"
+}

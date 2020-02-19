@@ -1,0 +1,172 @@
+{
+  "adaboost": {
+    "name": "AdaBoost Classification Trees",
+    "desc": "For classification using package <code>fastAdaboost</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "nIter",
+        "name": "Number of Trees",
+        "type": "numeric"
+      },
+      {
+        "id": "method",
+        "name": "Method",
+        "type": "character"
+      }
+    ]
+  },
+    "AdaBoost.M1": {
+    "name": "AdaBoost.M1",
+    "desc": "For classification using packages <code>adabag</code> and <code>plyr</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "mfinal",
+        "name": "Number of Trees",
+        "type": "numeric"
+      },
+      {
+        "id": "maxdepth",
+        "name": "Max Tree Depth",
+        "type": "numeric"
+      },
+      {
+        "id": "coeflearn",
+        "name": "Coefficient Type",
+        "type": "character"
+      }
+    ]
+  },
+  "amdai": {
+    "name": "Adaptive Mixture Discriminant Analysis",
+    "desc": "For classification using package <code>adaptDA</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "model",
+        "name": "Model Type",
+        "type": "character"
+      }
+    ]
+  },
+  "ANFIS": {
+    "name": "Adaptive-Network-Based Fuzzy Inference System",
+    "desc": "For regression using package <code>frbs</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "num.labels",
+        "name": "Number of Fuzzy Terms",
+        "type": "numeric"
+      },
+      {
+        "id": "max.iter",
+        "name": "Max. Iterations",
+        "type": "numeric"
+      }
+    ]
+  },
+  "vglmAdjCat": {
+    "name": "Adjacent Categories Probability Model for Ordinal Data",
+    "desc": "For classification using package <code>VGAM</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "parallel",
+        "name": "Parallel Curves",
+        "type": "logical"
+      },
+      {
+        "id": "link",
+        "name": "Link Function",
+        "type": "character"
+      }
+    ]
+  },
+  "AdaBag": {
+    "name": "Bagged AdaBoost",
+    "desc": "For classification using packages <code>adabag</code> and <code>plyr</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "mfinal",
+        "name": "Number of Trees",
+        "type": "numeric"
+      },
+      {
+        "id": "maxdepth",
+        "name": "Max Tree Depth",
+        "type": "numeric"
+      }
+    ]
+  },
+  "rpart": {
+    "name": "CART",
+    "desc": "For classification and regression using package <code>rpart</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "cp",
+        "name": "Complexity Parameter",
+        "type": "numeric"
+      }
+    ]
+  },
+  "knn": {
+    "name": "k-Nearest Neighbors",
+    "desc": "For classification and regression with tuning parameters:",
+    "parameters": [
+      {
+        "id": "k",
+        "name": "Number of Neighbors",
+        "type": "numeric"
+      }
+    ]
+  },
+  "rf": {
+    "name": "Random Forest",
+    "desc": "For classification and regression using package <code>randomForest</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "mtry",
+        "name": "Number of Randomly Selected Predictors",
+        "type": "numeric"
+      }
+    ]
+  },
+  "xgbTree": {
+    "name": "eXtreme Gradient Boosting",
+    "desc": "For classification and regression using packages <code>xgboost</code> and <code>plyr</code> with tuning parameters:",
+    "parameters": [
+      {
+        "id": "nrounds",
+        "name": "Number of Boosting Iterations",
+        "type": "numeric"
+      },
+      {
+        "id": "max_depth",
+        "name": "Max Tree Depth",
+        "type": "numeric"
+      },
+      {
+        "id": "eta",
+        "name": "Shrinkage",
+        "type": "numeric"
+      },
+      {
+        "id": "gamma",
+        "name": "Minimum Loss Reduction",
+        "type": "numeric"
+      },
+      {
+        "id": "colsample_bytree",
+        "name": "Subsample Ratio of Columns",
+        "type": "numeric"
+      },
+      {
+        "id": "min_child_weight",
+        "name": "Minimum Sum of Instance Weight",
+        "type": "numeric"
+      },
+      {
+        "id": "subsample",
+        "name": "Subsample Percentage",
+        "type": "numeric"
+      }
+    ]
+  }
+}
