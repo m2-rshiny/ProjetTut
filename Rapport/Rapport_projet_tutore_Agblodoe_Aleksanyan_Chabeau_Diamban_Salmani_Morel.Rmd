@@ -24,7 +24,7 @@ output:
 \HRule\\ 
     \begin{center} 
     
-    {\LARGE\bfseries Développement d'application RShiny }\\[0.4cm]  
+    {\LARGE\bfseries Développement d'une application RShiny pour comparer des algorithmes d'apprentissage automatique avec caret }\\[0.4cm]  
 
     \end{center} 
 
@@ -62,7 +62,7 @@ output:
 
 
 \begin{center}
-\textbf{\large 21 février 2020} 
+\textbf{\large 19 février 2020} 
 \end{center}
 
 
@@ -91,11 +91,11 @@ Il concerne le développement d'une application RShiny permettant de comparer et
 
 Dans ce projet, après avoir identifié les besoins et les contraintes, nous avons procédé à la construction de notre application en créant plusieurs fichiers gérant l'interface utilisateur et les traitements côté serveur. Nous avons implémenté dans notre application, des algorithmes de classification supervisée et de régression comme AdaBoost Classification Trees, CART, les k plus proches voisins (kNN), etc... Pour ces différents algorithmes, l'utilisateur a la possibilité de choisir les hyper-paramètres. Nous avons ensuite procédé aux tests sur des jeux de données afin de comparer la performance des différents algorithmes.
 
-\newpage
-
 # 2. Contexte
 
 L’évolution des techniques de fouilles de données et d'apprentissage automatique, ainsi que l’accroissement des capacités de stockage et de calcul suscite, dans tous les domaines, un intérêt pour l'analyse de données massives. En ce sens, les domaines dans lesquels intervient l'entreprise BD ne font pas exception. Notre projet s'inscrivant dans ce contexte, cette application est destinée à devenir un outil d’investigation rapide utilisable en interne par des collaborateurs BD en possession de jeux de données sur lesquels ils souhaiteraient pouvoir obtenir une idée rapide de la performance de différents types de modèles de prédictions.
+
+\newpage
 
 # 3. Méthodologie
 
@@ -139,7 +139,7 @@ L'imputation multivariée par équations chaînées */Multivariate imputation by
 
 Afin d'optimiser la capacité de généralisation du modèle, il est important de procéder à l'optimisation des hyper-paramètres. Ceci passe par l'utilisation d’un jeu de validation et l'utilisation de techniques de validation croisée. Au préalable, on définit un jeu de test pour évaluer les performances du modèle *(une fois optimisé)*.
 
-![](img/valid.png){width=300px}
+![Découpage train/validation/test](img/valid.png){width=300px}
 
 Avec un jeu de validation on suit ces étapes:
 
@@ -168,13 +168,17 @@ A la fin, on évalue les performances du modèle.
 
 Ainsi, on évalue les performances sur tout le jeu d’apprentissage et on évite le sur-apprentissage
 
-![](img/cv.png){width=400px}
+<center>
+
+![Illustration de la validation croisée](img/cv.png)
+
+</center>
 
 ## 3.3 Algorithmes d'apprentissage automatique
 
 De nombreux algorithmes d'apprentissage automatiques existent et certains se ressemblent beaucoup. Là est l'intérêt de notre application qui mettra en évidence la différence de performance entre deux agorithmes à priori similaires. Voici quelques exemples d'algorithmes proposés par la librairie caret.
 
-**kNN**
+**KNN**
 
 L’algorithme des kNN consiste a trouver les $k$ observations $x_i$ les plus proches de l’observation $x'$ à classifier. Ensuite, il faut definir $f(x')$ en fonction des réponses $y_i$ des kNN. Pour la régression, c’est la valeur moyenne qui est affectée et pour la classification, c'est la classe majoritaire. Les hyper-paramètres de cet algorithme sont le choix du **critere de distance** et de le nombre de **k-voisins**.
 
@@ -221,7 +225,7 @@ Un arbre de régression fait référence à un algorithme dans lequel se trouve 
 
 À la base, la méthode des forêts aléatoires est basée sur le bagging /aggrégation par bootstrap/, il est très performant sur de nombreux problèmes et facile à paramétrer. Principe d’algorithmes et de découper l’espace d’entrée en région, estimer et prédire une valeur par région. Pour la régression on choisit une valeur moyenne dans la région, et pour la classification on choisit la classe majoritaire. Les avantages de cette méthode sont l’interprétabilité du modèle et le mécanisme de prédiction proche du processus humain.
 
-**rfRanger**
+**Ranger (random forest)**
 
 Ranger est une implémentation rapide de forêts aléatoires ou partitionnement récursif, particulièrement adapté aux données de grande dimension. Les forêts de classification, de régression et de survie sont prises en charge. Les forêts de classification et de régression sont mises en œuvre comme dans la forêt aléatoire d'origine, les forêts de survie comme dans les forêts de survie aléatoire.
 
@@ -235,7 +239,7 @@ L’amplification du gradient est une approche où de nouveaux modèles sont cr�
 Cette approche prend en charge à la fois les problèmes de modélisation prédictive de régression et de classification.
 
 
-**Ridge Regression**
+**Régression ridge**
 
 Régression linéaire avec perte quadratique et pénalité L2 :
 
@@ -251,7 +255,7 @@ Pour le résoudre il faut centrer les variables $\rightarrow \tilde{x}_{ij} = x_
 3. solution : $w^*=(X^TX+\lambda I)^{-1} X^Ty \ ou \ X[i,j]=\tilde{x}_{ij}$
 
 
-**Lasso Regression**
+**Régression lasso**
 
 Régression linéaire avec perte quadratique et pénalité L1 :
 
@@ -267,7 +271,7 @@ Du coup, par rapport à pénalité ridge :
 
 $\Rightarrow$ solution parcimonieuse (sparse) : sélection de variables
   
-**AdaBoost M1**
+**AdaBoost**
 
 AdaBoost (boosting adaptatif) est un algorithme d’apprentissage assembliste qui peut être utilisé pour la classification ou la régression. Bien qu’AdaBoost résiste mieux au surajustement qu’un grand nombre d’algorithmes de machine learning, il est parfois sensible aux données bruitées et aux valeurs aberrantes. 
 
@@ -290,6 +294,8 @@ Le package caret *(abréviation de Classification And REgression Training)* est 
 ### 3.4.2 Tidyverse
 
 Tidyverse est un système cohérent de packages pour la manipulation, l'exploration et la visualisation de données qui partagent une philosophie de conception commune. Ceux-ci ont été principalement développés par Hadley Wickham lui-même, mais ils sont maintenant développés par plusieurs contributeurs. Les packages Tidyverse sont destinés à rendre les statisticiens et les scientifiques des données plus productifs en les guidant à travers des flux de travail qui facilitent la communication et aboutissent à des produits de travail reproductibles. Fondamentalement, l'inverse concerne les connexions entre les outils qui rendent le workflow possible.
+
+\newpage
 
 # 4. Présentation de l'application
 
@@ -330,17 +336,47 @@ En ce qui concerne notre application web, différentes contraintes inhérentes �
 
 L'interface utilisateur a été conçue pour être intuitive et fonctionnelle. Répondant aux contraintes, elle permet à l'utilisateur de charger un jeu de données (de type TSV ou CSV), de choisir les variables explicatives et celles à expliquer, ainsi que les algorithmes et les paramètres de son choix. Outre celà, l'utilisateur a aussi la possibilté de faire des statistiques decriptives pour lui permettre d'explorer son jeu de données.
 
-Ci-dessous une capture d'écran de l'application avec un exemple à l'appui.
+<center>
 
-### 4.4.1 Préparation de donnees
+![Barre de navigation](img/navbar.png){width=300px}
 
+</center>
+
+### 4.4.1 Importation des données
+  
 Le premier onglet de notre application permet à l'utilisateur d'importer le jeu de données sur lequel il souhaite tester les différents algorithmes d'apprentissage automatique.
 
 Les fichiers acceptés sont les fichiers texte avec séparateur. L'utilisateur peut choisir le séparteur, le caractère de citation, préciser s'il y a une ligne d'entête et visualiser les premières lignes du jeu de données importé.
 
 Nous avons décidé d'imposer à l'utilisateur de cliquer sur un bouton pour importer ses données une fois les paramètres d'importation remplis. Nous avons fait ce choix pour éviter à l'application de se mettre à jour dès que l'utilisateur change un paramètre, cela peut prendre beaucoup de temps pour des jeux de données trop volumineux. Ce bouton permet donc de rendre l'onglet plus fluide.
 
-### 4.4.2 Statistiques Descriptives
+<center>
+
+![Onglet importation des données](img/prepa_data.png)
+
+</center>
+
+### 4.4.2 Préparation et manipulation des données importées
+
+L'application propose des outils graphiques pour pré-traiter les données importées avant de les transmettre à `caret`, à savoir :
+
+* Sélectionner, arranger et filtrer les données à partir d'un champ textuel. La syntaxe de ces différentes opérations est présenté ci-dessous :
+  * sélectionner et réarranger plusieurs colonnes : `var10, var1:9` ;
+  * supprimer une colonne : `-var1` ;
+  * filter les données : `var1 > 100`.
+* Modifier le type d'une ou plusieurs colonnes. Nous proposons ici les types (`logical`, `double`, `int`, `character` et `factor`) ;
+* Renommer les colonnes du dataset ;
+* Construire une nouvelle variable à partir des autres (par exemple en écrivant `(var1 + var2) / 100`).
+
+Ces fonctionnalités sont purement basées sur les fonctions proposées par Tidyverse, et sont applicables récursivement : on peut appliquer un pré-traitement pour obtenir un dataset temporaire, et y appliquer un autre traitement par la suite, et ainsi de suite jusqu'à l'obtention du dataset voulu. Un bouton permet également, à tout moment, de revenir au dataset original.
+
+<center>
+
+![Onglet manipulation des données](img/manip_data.png)
+
+</center>
+
+### 4.4.3 Statistiques Descriptives
 
 Cet onglet permet à l'utilisateur de faire quelques analyses exploratoires des données pour visualiser les informations de bases à savoir:
 
@@ -372,16 +408,22 @@ L'imputation se fait grâce au package **mice** avec les quatre méthodes suivan
 
 Un graphique de la densité est présenté pour comparer les données observées et les données imputées de chaque variable. Toutefois s'il y'a plus de six variables contenant des données manquantes, seul un aperçu des données imputées est présenté sous forme de tableau.
 
-### 4.4.3 ML Parameteres
+<center>
+
+![Onglet statistiques descriptives](img/stat_desc.png)
+
+</center>
+
+### 4.4.4 Choix de l'algorithme et de ses hyper-paramètres
 
 Après avoir téléchargé le fichier de données et effectué quelques statistiques descriptives, l'utilisateur a la possibilité de choisir une liste d'algorithmes à tester, leurs hyperparamètres et les prétraitements à appliquer sur les données pour chaque algorithme. Cet onglet de l'application est fait pour ça. Son principal défi a été de proposer une interface utilisateur réactive permettant de répondre à la non-homogénéité des paramètres des fonctions de caret selon l'algorithme séléctionné.
 
 
-#### 4.4.3.1 Choix des algorithmes
+#### 4.4.4.1 Choix des algorithmes
 
 Notre objectif était ici de permettre à l'utilisateur de choisir de manière simple, un ou plusieur algorithmes à tester sur son jeu de données. Le problème est que la librairie Caret de R propose une énorme quantité d'algorithmes de classification et de régression. Il n'était donc pas pensable d'écrire cette liste en dur dans le code. Nous avons plutôt choisi d'en enregistrer une liste dans un fichier JSON. Ce fichier liste les détails de chaque algorithme(nom, hyper-paramètres, description, etc...). Ainsi, l'administrateur de l'application pourra ajouter ou supprimer des algorithmes de cette liste. Cette liste est celle qui est proposée dans l'interface utilisateur au travers d'un menu déroulant à choix multiple.
 
-#### 4.4.3.2 Paramétrisation des algorithmes
+#### 4.4.4.2 Paramétrisation des algorithmes
 
 Quand l'utilisateur séléctionne un algorithme, l'interface utilisateur se met à jour et propose la liste d'entrées correspondant chacune à un hyper-paramètre de l'algorithme. L'utilisateur n'a alors plus qu'à saisir les valeurs de son choix dans ces entrées pour les affecter aux hyper-paramètres. L'application étant déstinée à des utilisteurs déjà initiés au langage R, nous avons pûs nous permettre (en accord avec le tuteur) de demander à l'utilisateur d'utiliser des fonctions telles que *seq(), c()* ou des opérateurs tels que *:* pour exprimer un vecteur s'il désire tester plusieurs hyper-paramètres sur un algorithme.
 
@@ -409,17 +451,23 @@ Nous avons pu récupérer de manière automatique la liste des hyper-paramètres
 
 La fonction *train()* de caret, avec laquelle nous entraînons nos algorithmes permet grâce à l'un de ses paramètres d'appliquer un ou plusieurs pré-traitement(s) sur les données. La liste des pré-traitements est assez courte, nous l'avons donc réécrite en dur dans le code pour proposer l'utilisateur de choisir les pré-traitements à appliquer pour chaque algorithme.
 
-#### 4.4.3.3 Sauvegarde/Chargement d'une configuration
+#### 4.4.4.3 Sauvegarde/Chargement d'une configuration
 
 L'utilisateur a le choix de saisir lui même la configuration des algorithmes à tester (comme expliqué précédemment), mais il peut aussi charger un fichier csv de son choix contenant une configuration partiulière. Le données de configuration contenues dans ce fichier doivent cependant avoir la même structure que celle attendue par l'application (bons noms de colonnes, bon paramètres etc...). Cela permet à l'utilisateur de ne pas s'embêter à resaisir tous les paramètres.
 
 L'utilisateur peut aussi sauvegarder dans un fichier csv la liste des paramètres qu'il vient de crééer. Il lui suffit de cliquer sur *Download this configuration*
 
-#### 4.4.3.4 Lien entre la saisie de l'utilisateur et le traitement côté serveur
+#### 4.4.4.4 Lien entre la saisie de l'utilisateur et le traitement côté serveur
 
 Côté serveur, nous utilisons la fonction *train()* de caret pour entrapiner nos modèles. NOus avons trouvé assez pratique de sauvegarder dans une dataframe les paramètres correspondants à la configuration des algorithmes choisie par l'utilisateur. Une fois la configuration validée par l'utilisateur (qu'elle soit saisie à la main ou importée), nous créons une dataframe avec une colone pour chaque paramètre de la fonction *train(method, preproc, ...)*. Chaque ligne de cette dataframe correspond à un algorithme séléctionné par l'utilisateur. Nous remplissons ensuite les colonnes avec les paramètres séléctionnés par l'utilisateur. Cette dataframe sera réutilisée après losque nous entraînerons les données. Nous vous l'expliquons dans la partie **4.4.4** .
 
-### 4.4.4 ML Algorithme
+<center>
+
+![Onglet choix algorithmes et hyper-paramètres](img/hyper_params.png)
+
+</center>
+
+### 4.4.5 Execution des algorithmes
 
 Cette partie permet de comparer les différents algorithmes sélectionnés dans le précédent onglet.
 
@@ -436,23 +484,34 @@ Par la suite, deux graphiques(Accuracy et Kappa) comparant les performances des 
 
 Et pour chaque modèle, si l'utilisateur choisit de tester un paramètre avec plusieurs valeurs, par exemple pour knn: $k = 2:10$, un graphique affichera le meilleur paramètre donnant le meilleur accuracy ou le plus petit taux d'erreur.
 
+<center>
+
+![Onglet performances algorithmes 1/2](img/algos1_2.png)
+
+</center>
+
+<center>
+
+![Onglet performances algorithmes 2/2](img/algos2_2.png)
+
+</center>
 
 \newpage
 
 # 5. Structure de l'application
 
-## Structure du projet
+## 5.1 Structure du projet
 
-### Problématiques
+### 5.1.1 Problématiques
 
 Un des objectifs du projet était de réaliser une application qui soit à la fois *facilement extensible*, et *facilement maintenable*. Le problème est que le code d'une application Shiny peut très vite devenir illisible si l'on reste sur le découpage traditionnel en deux fichiers, c'est-à-dire un fichier `ui.R` pour l'interface graphique et un fichier `server.R` pour le traitement des données côté serveur. D'autres contraintes s'ajoutent également, que l'on peut résumer par les points suivants :
 
-* **Code source difficile à lire** : dans le code, toutes les fonctionnalités de l'application sont mélangés au même endroit, il est alors difficile de retrouver le code correspondant à la fonctionnalité, que ce soit ses éléments graphiques, ou le traitement associé. De même, il peut arriver que le code de traitement côté serveur soit mélangé avec le code pour générer l'interface graphique (par exemple, dans le cas où on générerait une interface réactive). On aimerait donc pouvoir diviser le code en plusieurs modules, afin de regrouper au sein d'une même structure le code associé à chaque fonctionnalité ;
+* **Code source difficile à lire** : dans le code, toutes les fonctionnalités de l'application sont mélangées au même endroit, il est alors difficile de retrouver le code correspondant à la fonctionnalité, que ce soit ses éléments graphiques, ou le traitement associé. De même, il peut arriver que le code de traitement côté serveur soit mélangé avec le code pour générer l'interface graphique (par exemple, dans le cas où nous générons une interface réactive). On aimerait donc pouvoir diviser le code en plusieurs modules, afin de regrouper au sein d'une même structure le code associé à chaque fonctionnalité ;
 * **Aucun mécanisme pour gérer efficacement les identifiants des éléments graphiques (ou *widgets*)** : dans une application Shiny, chaque widget possède un identifiant, il peut arriver facilement que l'on donne par maladresse le même identifiant pour des widgets qui font la même chose, mais qui se situent chacun dans un contexte différent. On aimerait donc disposer d'un système d'espace de noms pour pouvoir éviter ces conflits ;
-* **Aucune contrainte d'accès pour chaque fonctionnalité** : chaque fonctionnalité à accès à toutes les données de l'application, ce qui peut être difficile à déboguer si, par exemple, un élément graphique modifie un comportement du programme auquel il ne devrait pas avoir accès. On aimerait donc pouvoir limiter et contrôler l'accès aux données de chaque fonctionnalité ;
+* **Aucune contrainte d'accès pour chaque fonctionnalité** : chaque fonctionnalité a accès à toutes les données de l'application, ce qui peut être difficile à déboguer si, par exemple, un élément graphique modifie un comportement du programme auquel il ne devrait pas avoir accès. On aimerait donc pouvoir limiter et contrôler l'accès aux données de chaque fonctionnalité ;
 * **Application difficilement extensible** : conséquence des points précédents.
 
-### Modules Shiny
+### 5.1.2 Modules Shiny
 
 Pour répondre à ces problématiques, Shiny propose de modulariser son code source en plusieurs éléments appelés *modules Shiny*. Cette structure permet de :
 
@@ -462,9 +521,11 @@ Pour répondre à ces problématiques, Shiny propose de modulariser son code sou
 * contrôler les données entrant et sortant de chaque modules ;
 * de facilement étendre les fonctionnalités d'une application.
 
-Chaque module est ainsi facilement maintenable, réutilisable et modifiable. De plus, chaque module étant indépendant les uns des autres, il n'y a pas de risque qu'une modification dans un module casse le fonctionnement d'un autre. Il est également possible de créer des sous-modules Shiny.
+Chaque module est ainsi facilement maintenable, réutilisable et modifiable. De plus, chaque module étant indépendant des autres, il n'y a pas de risque qu'une modification dans un module casse le fonctionnement d'un autre. Il est également possible de créer des sous-modules Shiny.
 
 Aussi, une conséquence de ce découpage est qu'il est beaucoup plus facile de se diviser les tâches de développement, chacun pouvant travailler dans un module en particulier, sans devoir jongler avec le code des autres dans un même fichier. L'arboresence du projet est présentée ci-dessous :
+
+\newpage
 
 ```
 .
@@ -495,6 +556,8 @@ Aussi, une conséquence de ce découpage est qu'il est beaucoup plus facile de s
     └── caret-ml-algorithms-list.json
 ```
 
+\newpage
+
 Nous trouvons ainsi le point d'entrée `app.R` ainsi que les modules/sous-modules du projet, à savoir :
 
 * `data-importation.R` : module chargé d'importer les données ;
@@ -518,14 +581,17 @@ server <- function(input, output) {
 }
 ```
 
-### Structure du projet
+### 5.1.3 Structure du projet
 
 Grâce à cette méthodologie, nous pouvons représenter graphiquement la structure de notre application par un diagramme affichant les modules et leurs relations (entrées/sorties). Un exemple (simplifié) de diagramme pour notre projet est présenté ci-dessous :
 
 <center>
-![Diagramme](img/diagram.png){width=300px}
+
+![Diagramme structure du projet](img/diagram.png){width=300px}
+
 </center>
 
+\newpage
 
 # Conclusion
 
