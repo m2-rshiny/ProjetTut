@@ -33,7 +33,7 @@ model_selection_ui <- function(id) {
   select_target_variable <- uiOutput(ns("targetVar"))
 
   # To indicate if we want to apply a one-hot encoding to the target variable
-  do_one_hot <- radioButtons("oneHot", "Apply a one-hot encoding?",
+  do_one_hot <- radioButtons(ns("oneHot"), "Apply a one-hot encoding?",
     choices = c("Yes", "No"),
     selected = "No"
   )
@@ -51,6 +51,9 @@ model_selection_ui <- function(id) {
 
   # TODO
   refresh_json_button <- actionButton(ns("refreshJSON"), "Refresh")
+  
+  # TODO
+  exec_button <- actionButton(ns("exec"), "Exécuter")
 
   # UI LAYOUTS #################################################################
 
@@ -73,7 +76,8 @@ model_selection_ui <- function(id) {
       do_one_hot,
       hr(),
       do_cv,
-      uiOutput(ns("resampleDesc"))
+      uiOutput(ns("resampleDesc")),
+      exec_button
     )
   )
 
@@ -109,7 +113,9 @@ model_selection_ui <- function(id) {
   tagList(
     h3("Model Selection"),
     hr(),
-    fluid_row
+    fluid_row,
+    plotOutput(ns("plot_compare_algo")),
+    uiOutput(ns("graph_algo"))
   )
 }
 
@@ -165,7 +171,7 @@ model_selection <- function(input, output, session, dataset, algorithms_list,
 
     # Return the correct element
     switch(input$doCV,
-      "Yes" = k_folds,
+      "Yes" = tagList(train_size, k_folds),
       "No" = train_size
     )
   })
@@ -249,8 +255,6 @@ model_selection <- function(input, output, session, dataset, algorithms_list,
       configuration[[a]]$tuneGrid <- list()
       for (hp in algorithms_details[[a]]$parameters$id) {
         value <- try(eval(parse(text=input[[paste0(a, hp)]])))
-        print(value)
-        print(class(value))
         if (!(class(value) %in% c("integer", "numeric", "character"))) value <- input[[paste0(a, hp)]]
         configuration[[a]]$tuneGrid[[hp]] <- value
         if (configuration[[a]]$tuneGrid[[hp]] == "") configuration[[a]]$tuneGrid[[hp]] <- NULL
@@ -259,4 +263,121 @@ model_selection <- function(input, output, session, dataset, algorithms_list,
     }
     rv$configuration <- configuration
   })
+  
+  # TODO
+  observeEvent(input$exec, {
+    # TODO
+    target <- input$targetVar
+    df <- dataset()
+    
+    # Train set
+    y_train <- as_vector(select(df, target))
+    x_train <- select(df, -target)
+    
+    # One-hot encoding
+    ifelse(input$oneHot == "Yes", compMat <- model.matrix(~ . - 1, x_train), compMat <- x_train)
+    compMat <- cbind.data.frame(y = y_train, compMat)
+    
+    # Train/test split
+    train_index <- sample(1:nrow(compMat), round(input$trainSize/100 * nrow(compMat)), replace = FALSE)
+    compDf_train <- compMat[train_index, ]
+    compDf_test <- compMat[-train_index,]
+
+    ifelse(nrow(compDf_train) < 1000, pSubSample <- 0.1, pSubSample <- 0.01)
+    classResp <- class(compDf_train$y)
+
+    if (classResp == "numeric" || classResp == "integer"){
+      mydata <- compDf_train %>%
+        na.omit(.) %>%
+        dplyr::sample_frac(pSubSample)
+
+    } else {
+      mydata <- compDf_train %>%
+        na.omit(.) %>%
+        dplyr::group_by(y) %>%
+        dplyr::sample_frac(pSubSample) %>%
+        dplyr::ungroup()
+    }
+    
+    # TODO
+    algo_choice <- algorithms_selected()
+
+    #------------ Création de la liste des algo
+    if (input$doCV == "Yes") {
+      control <- trainControl(method = "cv", number = input$kFolds)
+    } else {
+      control <- trainControl()
+    }
+    
+    x_train <- as.data.frame(mydata %>% select(-y))
+    y_train <- mydata$y
+    train_algo <- lapply(algo_choice, function (m) {
+      train(x = x_train, y = y_train, trControl = control, preProcess = rv$configuration[[m]]$preprocessing, method = m, tuneGrid = expand.grid(rv$configuration[[m]]$tuneGrid))
+    })
+
+    # La sortie de train_algo est une liste contenant les résultats de chaque algo
+    names(train_algo) <- algorithms_selected() # On attribut un nom à chaque liste
+    cv_train <- train_algo
+
+    #---- réactive pour détecter s'il y'a au moins un algo choisi
+    choices_algo <- reactive({ # A ne surtout pas enlever
+      if (is.null(algorithms_selected())) {
+        return()
+      }
+      algo_reactive <- cv_train[algorithms_selected()]
+      algo_reactive
+    })
+
+    #-------------- Affichage des résultats
+    # Graphique pour comparer tous les algos
+    output$plot_compare_algo <- renderPlot({
+      if (length(choices_algo()) < 2) {
+        return(NULL)
+      }
+      results <- resamples(choices_algo())
+      scales <- list(x = list(relation = "free"), y = list(relation = "free"))
+      ggplot(results, metric = results$metrics, colour = results$metrics, conf.level = .95, scales = scales) +
+        theme_linedraw()
+    })
+
+    output$graph_algo <- renderUI({
+      lapply(algorithms_selected(), function(i) {
+        column(
+          4,
+          output[[paste0("c", i)]] <- renderPlotly({
+            algo_result <- choices_algo()[[i]]$results
+            position_accuracy <- which(names(algo_result) == "Accuracy")
+
+            if (length(position_accuracy) == 0) {
+              position_accuracy <- which(names(algo_result) == "RMSE")
+            }
+
+            df_metrics <- algo_result[, (position_accuracy - 1):(position_accuracy + 1)]
+            df_metrics <- melt(df_metrics,
+                               id.vars = names(df_metrics)[1],
+                               variable.name = "metrics", value.name = "value_metrics"
+            )
+            p <- ggplot(df_metrics, aes(x = df_metrics[, 1], y = value_metrics, color = metrics)) +
+              geom_point(col = ifelse(df_metrics[, 1] == get_best_result(choices_algo()[[i]])[, (position_accuracy - 1)],
+                                      "red", "white"
+              )) +
+              geom_line() +
+              labs(title = names(choices_algo()[i]), x = names(df_metrics)[1], y = " ") +
+              scale_color_manual(values = mycolors)
+            ggplotly(p) %>%
+              layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+          })
+        )
+      })
+    })
+  })
 }
+
+get_best_result <- function(caret_fit) {
+  best <- which(rownames(caret_fit$results) == rownames(caret_fit$bestTune))
+  best_result <- caret_fit$results[best, ]
+  rownames(best_result) <- NULL
+  round(best_result, 2)
+}
+
+mycolors <- c("orange", "#0072B2","#990000", "#D55E00")

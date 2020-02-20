@@ -6,6 +6,11 @@ library(DT)
 library(jsonlite)
 library(caret)
 library(rlang)
+library(doParallel)
+library(plotly)
+library(reshape2)
+library(mice)
+library(DataExplorer)
 
 # SHINY MODULES ################################################################
 
