@@ -71,11 +71,6 @@ method_imputation <- selectInput("met_imput", "Imputation methode", choices = c(
 ### Onglet 3 : Paramètres des algos -----
 
 # Choix méthodes
-choix_methode <- radioButtons("class_reg", "Choisir une méthode:",
-                              choices = c("Classification", "Régression")
-)
-
-# Choix méthodes
 choix_config <- radioButtons(
   "choix_config",
   "Choix configuration",
@@ -237,7 +232,6 @@ tab3 <- tabPanel(
   fluidRow(
     column(
       2,
-      choix_methode,
       choix_config,
       choix_algo,
       import_fich_config,
