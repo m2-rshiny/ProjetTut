@@ -1,0 +1,30 @@
+{
+  "adaboost": {
+    "preprocessing": [
+      "scale",
+      "range"
+    ],
+    "tuneGrid": {
+      "nIter": "12",
+      "method": "test1"
+    }
+  },
+  "rf": {
+    "preprocessing": [
+      "center",
+      "scale"
+    ],
+    "tuneGrid": {
+      "mtry": "0.9"
+    }
+  },
+  "rpart": {
+    "preprocessing": [
+      "scale",
+      "range"
+    ],
+    "tuneGrid": {
+      "cp": "2"
+    }
+  }
+}

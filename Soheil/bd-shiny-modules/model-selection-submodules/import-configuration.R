@@ -9,7 +9,7 @@ import_configuration_ui <- function(id) {
   upload_config_file <- fileInput(
     inputId = ns("uploadConfigFile"),
     label = "Load a configuration file",
-    accept = c("text/csv", ".csv")
+    accept = c("application/json", ".json")
   )
   
   # TODO
@@ -22,4 +22,5 @@ import_configuration_ui <- function(id) {
 
 import_configuration <- function(input, output, session) {
   # TODO
+  fromJSON(input$uploadConfigFile$datapath)
 }

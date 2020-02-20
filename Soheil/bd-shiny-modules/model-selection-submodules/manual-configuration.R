@@ -14,12 +14,8 @@ manual_configuration_ui <- function(id, algorithms_list) {
   )
   
   # TODO
-  save_button <- actionButton(ns("save"), "Save configuration")
-  
-  # TODO
   tagList(
-    select_algorithms,
-    save_button
+    select_algorithms
   )
 }
 

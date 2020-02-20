@@ -58,7 +58,7 @@ data_preparation_ui <- function(id) {
 
   # Return UI
   tagList(
-    h3("Data Preprocessing"),
+    h3("Data Preparation"),
     hr(),
     sidebar_layout
   )
