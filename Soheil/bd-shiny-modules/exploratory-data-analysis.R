@@ -22,7 +22,7 @@ exploratory_data_analysis_ui <- function(id) {
   ui_imput <- uiOutput(ns("imputation"))
   plot_density_imput <- plotOutput(ns("show_imput"))
   
-  method_imputation <- selectInput(ns("met_imput"), "Imputation methode", choices = c("pmm", "norm", "mean"))
+  method_imputation <- selectInput(ns("met_imput"), "Imputation methode", choices = c("rf", "pmm", "norm", "mean"))
 
   tab2 <- tabPanel(
     "Stat Desc",
@@ -50,18 +50,20 @@ exploratory_data_analysis_ui <- function(id) {
         ui_imput,
         conditionalPanel(
           condition = "input.imput == true",
+          ns = ns,
           method_imputation,
-          actionButton("exec_imput", "Execut")
+          actionButton(ns("exec_imput"), "Execute")
         )
       ),
       column(
         5,
         conditionalPanel(
           condition = "input.imput == true",
+          ns = ns,
           plot_density_imput
         )
       ),
-      column(5, tableOutput("tbl"))
+      column(5, dataTableOutput(ns("tbl")))
     )
   )
   
@@ -132,7 +134,7 @@ exploratory_data_analysis <- function(input, output, session, data_inp) {
   })
   
   output$plt_variable_desc <- renderPlotly({
-    y <- data_inp()[, input$variable_desc]
+    y <- as.data.frame(data_inp())[, input$variable_desc]
     calss_yvar_desc <- class(y)
     if (calss_yvar_desc == "factor" || calss_yvar_desc == "character") {
       p <- data_inp() %>%
@@ -155,7 +157,7 @@ exploratory_data_analysis <- function(input, output, session, data_inp) {
   
   # Imputation
   output$imputation <- renderUI({
-    if (sum(is.na(data_inp())) != 0) {
+    if (sum(is.na(as.data.frame(data_inp()))) != 0) {
       checkboxInput(ns("imput"), "Data Imputation", FALSE)
     }
   })
@@ -176,10 +178,12 @@ exploratory_data_analysis <- function(input, output, session, data_inp) {
         return(NULL)
       }
     })
+    print(data_im)
     return(data_im)
   })
   
-  output$tbl <- renderTable({
+  output$tbl <- renderDataTable({
+    print(data_imput())
     ifelse(!is.null(data_imput()), df <- data_imput(), df <- data_inp())
     df
   })
@@ -210,4 +214,6 @@ exploratory_data_analysis <- function(input, output, session, data_inp) {
   # output$plot <- renderPlot({
   #   current_plot()
   # }, height = 650)
+  
+  data_imput
 }

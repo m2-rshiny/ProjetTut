@@ -11,6 +11,7 @@ library(plotly)
 library(reshape2)
 library(mice)
 library(DataExplorer)
+library(shinythemes)
 
 # SHINY MODULES ################################################################
 
@@ -24,6 +25,9 @@ source("bd-shiny-modules/export-results.R")
 
 # Application name
 app_name <- "BD Shiny"
+
+# Changement du thème
+theme_set(theme_minimal())
 
 # List of caret ML algorithms to take account
 caret_ml_algorithms_list <- fromJSON("config/caret-ml-algorithms-list.json")
@@ -48,10 +52,10 @@ ui <- navbarPage(
 server <- function(input, output) {
   data_imported <- callModule(data_importation, "di")
   data_prepared <- callModule(data_preparation, "dp", data_imported)
-  callModule(exploratory_data_analysis, "eda", data_prepared)
-  callModule(model_selection,"ms", data_prepared, caret_ml_algorithms_list, caret_ml_algorithms_details, caret_preprocessing_list)
+  data_imputed <- callModule(exploratory_data_analysis, "eda", data_prepared)
+  callModule(model_selection,"ms", data_imputed, caret_ml_algorithms_list, caret_ml_algorithms_details, caret_preprocessing_list)
   callModule(export_results, "er")
 }
 
 # Shiny App
-shinyApp(ui = ui, server = server)
+shinyApp(ui = fluidPage(ui, theme = shinytheme("simplex")), server = server)

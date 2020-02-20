@@ -184,6 +184,7 @@ model_selection <- function(input, output, session, dataset, algorithms_list,
       rv$configuration <- callModule(import_configuration, "file")
       rv$algorithms_selected <- names(rv$configuration)
     }
+    print(dataset())
   })
 
   # Render the UI to define the hyperparameter space
